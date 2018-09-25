@@ -7,19 +7,4 @@ services:
   - postgresql
 
 before_script:
-<<<<<<< HEAD
   - psql -c 'create database travis_ci_test;' -U postgres
-after_success:
-- npm run coveralls
-  
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - psql -c 'create database travis_ci_test;' -U postgres
-=======
-  - psql -c 'create database travis_ci_test;' -U postgres
->>>>>>> ec326e6... chore(CI): add travis.yml file for continous integration
-=======
-  - psql -c 'create database travis_ci_test;' -U postgres
->>>>>>> c85cba0... fix(CI): added new line to travis.yml and README.md
->>>>>>> fix(CI): added new line to travis.yml and README.md
