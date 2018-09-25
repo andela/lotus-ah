@@ -1,7 +1,7 @@
 [![protected_by hound](https://img.shields.io/badge/protected%20by-Hound-blue.svg)](https://houndci.com/repos)
 [![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
 
-Authors Haven - A Social platform for the creative at heart.```q
+# Authors Haven - A Social platform for the creative at heart.
 
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
