@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon index.js --exec babel-node --presets es2015",
     "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "coveralls": "nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter spec --require babel-register server/test/* --exit"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -44,6 +45,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.11.1"
+    "eslint-plugin-react": "^7.11.1",
+    "nyc": "^13.0.1"
   }
 }
