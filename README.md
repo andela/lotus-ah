@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 [![protected_by hound](https://img.shields.io/badge/protected%20by-Hound-blue.svg)](https://houndci.com/repos)
 
+=======
+[![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
+>>>>>>> chore(CI): add travis.yml file for continous integration
 Authors Haven - A Social platform for the creative at heart.
 =======
 
