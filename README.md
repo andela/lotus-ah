@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
 Authors Haven - A Social platform for the creative at heart.
 =======
 
