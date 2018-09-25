@@ -2,10 +2,10 @@
 [![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
 
 # Authors Haven - A Social platform for the creative at heart.
+
 [![Coverage Status](https://coveralls.io/repos/github/andela/lotus-ah/badge.svg?branch=develop)](https://coveralls.io/github/andela/lotus-ah?branch=develop)
 
 Authors Haven - A Social platform for the creative at heart.
-=======
 
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
