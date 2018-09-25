@@ -3,7 +3,11 @@
 
 =======
 [![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
+<<<<<<< HEAD
 >>>>>>> chore(CI): add travis.yml file for continous integration
+=======
+
+>>>>>>> fix(CI): added new line to travis.yml and README.md
 Authors Haven - A Social platform for the creative at heart.
 =======
 
