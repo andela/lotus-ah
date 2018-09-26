@@ -22,4 +22,4 @@ module.exports = {
     host: process.env.HOST,
     dialect: process.env.DIALECT
   }
-}
+};
