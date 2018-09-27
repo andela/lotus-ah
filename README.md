@@ -1,69 +1,7 @@
-<<<<<<< HEAD
 [![protected_by hound](https://img.shields.io/badge/protected%20by-Hound-blue.svg)](https://houndci.com/repos)
 [![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
 
 # Authors Haven - A Social platform for the creative at heart.
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[![Coverage Status](https://coveralls.io/repos/github/andela/lotus-ah/badge.svg?branch=develop)](https://coveralls.io/github/andela/lotus-ah?branch=develop)
-
-=======
-=======
->>>>>>> b615812... chore(CI): add travis.yml file for continous integration
-=======
->>>>>>> 7cc04db... chore(Coveralls): Integrate coveralls
-=======
->>>>>>> e4129d4... Add a basic testing
-[![protected_by hound](https://img.shields.io/badge/protected%20by-Hound-blue.svg)](https://houndci.com/repos)
-<<<<<<< HEAD
->>>>>>> 5ca4286... chore(eslint): integrate eslint
-=======
-
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a0599e0... chore(houndci): integrate houndci
-=======
-=======
-[![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
-<<<<<<< HEAD
->>>>>>> chore(CI): add travis.yml file for continous integration
-<<<<<<< HEAD
->>>>>>> b615812... chore(CI): add travis.yml file for continous integration
-=======
-=======
-
->>>>>>> fix(CI): added new line to travis.yml and README.md
->>>>>>> 9c9d54f... fix(CI): added new line to travis.yml and README.md
-=======
-[![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
-<<<<<<< HEAD
->>>>>>> ec326e6... chore(CI): add travis.yml file for continous integration
-=======
-
-<<<<<<< HEAD
->>>>>>> c85cba0... fix(CI): added new line to travis.yml and README.md
-=======
->>>>>>> c85cba0d85c8f006d6364be485f09b675fe043ce
-=======
-[![Coverage Status](https://coveralls.io/repos/github/andela/lotus-ah/badge.svg?branch=develop)](https://coveralls.io/github/andela/lotus-ah?branch=develop)
-
->>>>>>> chore(Coveralls): Integrate coveralls
->>>>>>> 7cc04db... chore(Coveralls): Integrate coveralls
-=======
-[![Build Status](https://travis-ci.org/andela/lotus-ah.svg?branch=develop)](https://travis-ci.org/andela/lotus-ah)
-
-
-[![Coverage Status](https://coveralls.io/repos/github/andela/lotus-ah/badge.svg?branch=develop)](https://coveralls.io/github/andela/lotus-ah?branch=develop)
-
-
->>>>>>> e4129d4... Add a basic testing
-Authors Haven - A Social platform for the creative at heart.
-
->>>>>>> Add a basic testing
 
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
