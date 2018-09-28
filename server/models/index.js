@@ -1,8 +1,10 @@
-import config from '../config/config';
 
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
 
 const basename = path.basename(__filename);
 
