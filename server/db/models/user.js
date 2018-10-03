@@ -57,6 +57,13 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.DATE
     }
   });
+
+  User.associate = (models) => {
+    User.hasMany(models.Article, {
+      foreignKey: 'userId',
+      as: 'articles'
+    });
+  };
   return User;
 };
 export default user;

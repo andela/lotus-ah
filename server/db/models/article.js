@@ -13,6 +13,9 @@ const article = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    description: {
+      type: DataTypes.TEXT
+    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: true
