@@ -1,4 +1,3 @@
-
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
@@ -7,17 +6,42 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     firstname: {
       type: Sequelize.STRING
     },
     lastname: {
       type: Sequelize.STRING
     },
-    bio: {
-      type: Sequelize.TEXT
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
-    role_id: {
-      type: Sequelize.INTEGER
+    password: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    bio: {
+      type: Sequelize.STRING
+    },
+    userImage: {
+      type: Sequelize.STRING,
+    },
+    isPremium: {
+      type: Sequelize.BOOLEAN
+    },
+    isSuspended: {
+      type: Sequelize.BOOLEAN
+    },
+    isActivated: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    favouriteTags: {
+      type: Sequelize.ARRAY(Sequelize.TEXT)
     },
     createdAt: {
       allowNull: false,
@@ -27,6 +51,6 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE
     }
-  }),
+  }, { freezeTableName: true }),
   down: queryInterface => queryInterface.dropTable('Users')
 };

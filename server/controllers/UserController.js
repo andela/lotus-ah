@@ -9,9 +9,9 @@ class UserController {
      *
      *
      * @static
-     * @param {*} request
-     * @param {*} response
-     * @return {json} Object
+     * @param {object} request
+     * @param {object} response
+     * @return {object} user
      * @memberof UserController
      */
   static createUser(request, response) {
