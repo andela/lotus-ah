@@ -23,7 +23,6 @@ const article = (sequelize, DataTypes) => {
     imageUrl: {
       type: DataTypes.STRING,
       allowNull: true
-
     },
 
   });
@@ -33,6 +32,9 @@ const article = (sequelize, DataTypes) => {
     Article.belongsTo(models.User, {
       foriegnKey: 'userId',
       onDelete: 'CASCADE'
+    });
+    Article.belongsToMany(models.tag, {
+      through: 'articleTag',
     });
   };
   return Article;
