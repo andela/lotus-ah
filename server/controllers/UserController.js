@@ -107,5 +107,38 @@ class UserController {
       }))
       .catch((err) => { console.log(err.message); });
   }
+
+  /**
+     *
+     *
+     * @static
+     * @param {object} request
+     * @param {object} response
+     * @description Logs a user in to his account
+     * @return {object} user
+     * @memberof UserController
+     */
+  static loginUser(request, response) {
+    const { email, password } = request.body;
+    User.findOne({ where: { email } })
+      .then((user) => {
+        const check = bcrypt.compareSync(password, user.dataValues.password);
+        if (check) {
+          const userToken = auth.authenticate(user.dataValues);
+          delete user.password;
+          response.status(200).json({
+            status: 'success',
+            message: 'Login was Successfull',
+            token: userToken,
+            user
+          });
+        } else {
+          response.status(401).json({
+            status: 'failed',
+            message: 'Incorrect Email or Password'
+          });
+        }
+      }).catch(err => err.message);
+  }
 }
 export default UserController;
