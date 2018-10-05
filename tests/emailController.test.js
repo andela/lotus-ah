@@ -4,15 +4,18 @@ import app from '..';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
+const email = {
+  email1: 'chosomobuladike@gmail.com'
+};
 
 describe('Testing the email Controller', () => {
   it('Should return a true', (done) => {
     chai.request(app)
-      .get('/api/verificationemail')
+      .post('/api/v1/users')
+      .send({ email: email.email1 })
       .end((error, response) => {
         expect(response.body.message).to.be.an('string');
-        expect(response).to.have.status(200);
+        expect(response).to.have.status(201);
         done();
       });
   });

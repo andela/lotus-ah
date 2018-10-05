@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon index.js --exec babel-node --presets es2015",
+    "start:dev": "npm run lint && nodemon index.js --exec babel-node --presets es2015",
     "lint": "eslint . --fix",
     "migration": "sequelize db:migrate",
     "undo:migration": "sequelize db:migrate:undo:all",

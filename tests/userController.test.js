@@ -1,6 +1,9 @@
+// third-party libraries
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../index';
+
+// moduler importations
+import app from '..';
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -11,7 +14,7 @@ const userDetails = {
   lastname: 'obuladike',
   username: 'obulaworld',
   bio: 'A software Developer',
-  password: 'obulaworld'
+  password: 'georgina1'
 };
 
 const email = {

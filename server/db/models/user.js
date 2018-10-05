@@ -39,10 +39,6 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true
     },
-    // roleId: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true
-    // },
     isPremium: {
       type: DataTypes.BOOLEAN,
       allowNull: true

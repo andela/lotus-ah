@@ -1,5 +1,7 @@
+/**
+* @description User response messages
+*/
 const responseMessages = {
-
   messageForUnauthenticatedUser: '',
   messageForSuccessfulRegistration: '',
   messageForPasswordReset: '',

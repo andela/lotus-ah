@@ -1,5 +1,10 @@
+// third-party libraries
 import { Router } from 'express';
+
+// moduler importaions
 import UserController from '../../controllers/UserController';
+
+// middlewares
 import UserValidation from '../../middlewares/UserValidation';
 import AuthController from '../../middlewares/TokenVerification';
 
