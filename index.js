@@ -6,7 +6,9 @@ import cors from 'cors';
 import errorhandler from 'errorhandler';
 
 // routes
+import passport from 'passport';
 import router from './server/routes';
+import passportSetup from './server/config/passport';
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -15,6 +17,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express();
 
 app.use(cors());
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Normal express config defaults
 app.use(require('morgan')('dev'));

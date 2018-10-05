@@ -25,6 +25,15 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
+    googleId: {
+      type: DataTypes.STRING,
+    },
+    facebookId: {
+      type: DataTypes.STRING,
+    },
+    twitterId: {
+      type: DataTypes.STRING,
+    },
     bio: {
       type: DataTypes.TEXT,
       allowNull: true
