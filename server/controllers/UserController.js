@@ -109,15 +109,13 @@ class UserController {
   }
 
   /**
-     *
-     *
-     * @static
-     * @param {object} request
-     * @param {object} response
-     * @description Logs a user in to his account
-     * @return {object} user
-     * @memberof UserController
-     */
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @description Logs a user in to his account
+  * @return {object} user
+  * @memberof UserController
+  */
   static loginUser(request, response) {
     const { email, password } = request.body;
     User.findOne({ where: { email } })

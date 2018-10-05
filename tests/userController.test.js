@@ -137,7 +137,7 @@ describe('User Controller', () => {
   it('should return 200 for loging in with correct user details', (done) => {
     chai.request(app)
       .post('/api/v1/users/login')
-      .send({ email: email.email1, password: 'obulaworld' })
+      .send({ email: email.email1, password: 'georgina1' })
       .end((error, result) => {
         expect(result.status).to.not.eql(400);
         expect(result.status).to.eql(200);
