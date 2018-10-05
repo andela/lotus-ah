@@ -8,14 +8,17 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     firstname: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
     lastname: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
     username: {
       type: DataTypes.STRING,
       unique: true,
+      allowNull: true
     },
     email: {
       type: DataTypes.STRING,
@@ -26,27 +29,35 @@ const user = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: true
     },
     bio: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     favouriteTags: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true
     },
-    roleId: {
-      type: DataTypes.INTEGER
-    },
+    // roleId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true
+    // },
     isPremium: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     },
     isSuspended: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
-    imageUrl: {
-      type: DataTypes.STRING
+    userImage: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     isActivated: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     createdAt: {
       allowNull: false,
