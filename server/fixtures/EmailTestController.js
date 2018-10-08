@@ -2,7 +2,7 @@ import EmailController from '../controllers/EmailController';
 
 const user = {
   id: 2,
-  email: 'chukwuemeka.nwankwo@andela.com'
+  email: 'boss@andela.com'
 };
 
 const test = {
