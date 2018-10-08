@@ -63,6 +63,10 @@ const user = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'articles'
     });
+    User.hasMany(models.Comment, {
+      foreignKey: 'userId',
+      as: 'comment'
+    });
   };
   return User;
 };
