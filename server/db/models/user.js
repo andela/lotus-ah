@@ -74,6 +74,10 @@ const user = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'comment'
     });
+    User.hasOne(models.Role, {
+      foreignKey: 'roleId',
+      as: 'roles'
+    });
   };
   return User;
 };

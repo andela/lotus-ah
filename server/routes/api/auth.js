@@ -6,7 +6,7 @@ import { Router } from 'express';
 import AuthController from '../../controllers/AuthController';
 
 // Midleware for authentication
-import validator from '../../middleware/authValidator';
+import validator from '../../middlewares/authValidator';
 
 const authRouter = Router();
 authRouter.post('/auth/forgot_password', AuthController.forgotPassword);
