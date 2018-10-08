@@ -2,9 +2,9 @@
 
 const role = (sequelize, DataTypes) => {
   const Role = sequelize.define('Role', {
-    type: {
+    roleName: {
       type: DataTypes.STRING
-    }
+    },
   },
   {
     tableName: 'role'

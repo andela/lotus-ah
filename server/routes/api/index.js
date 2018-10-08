@@ -5,6 +5,7 @@ import bookmark from './bookmark';
 import tag from './tag';
 import articleRating from './articleRatings';
 import search from './search';
+import admin from './admin';
 
 
 // Import fixtures
@@ -14,6 +15,7 @@ import socialAuth from './socialAuthRoutes';
 import followRoute from './follow';
 
 const router = Router();
+router.use('/admin', admin);
 router.use('/', bookmark);
 router.use('/', articleRating);
 router.use('/users', users);
@@ -25,6 +27,13 @@ router.use('/', search);
 /*       ******** Fixture routes ****************
 */
 router.post('/create_dummy_user', createUser);
+
+/*      ********* End fixture routes *************   */
+
+
+/*       ******** Fixture routes ****************
+*/
+router.post('/users/create', createUser);
 
 /*      ********* End fixture routes *************   */
 

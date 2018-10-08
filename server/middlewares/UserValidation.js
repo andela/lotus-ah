@@ -119,7 +119,7 @@ const validation = {
         message: 'Password should contain atleast one number and one alphabet'
       });
     }
-    request.body.fileUrl = request.image ? request.image.secure_url : '';
+    request.body.fileUrl = request.file ? request.file.secure_url : '';
     next();
   },
 
@@ -150,7 +150,7 @@ const validation = {
         message: errors
       });
     }
-    request.body.fileUrl = request.image ? request.image.secure_url : '';
+    request.body.fileUrl = request.file ? request.file.secure_url : '';
     next();
   },
 

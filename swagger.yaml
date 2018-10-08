@@ -1,0 +1,158 @@
+## Reference => https://github.com/DinmaOtutu/RIDE-MY-WAY/
+swagger: "2.0"
+info:
+  description: "This is a an application create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.."
+  version: "1.0.0"
+  title: "AUTHOR'S HAVEN "
+  contact:
+    email: "authorshavencommunity@gmail.com"
+host: "authorshavenapp.herokuapp.com"
+basePath: "/"
+schemes:
+- "https"
+- "http"
+paths:
+  api/v1/users/:
+    post:
+      tags:
+      - "Users"
+      summary: "Register a "
+      description: "Returns a json of all entries of a particular user"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success"
+        401:
+          description: "No token provided"
+        500:
+          description: "Server Error or Invalid token"
+  api/v1/?token=:
+    get:
+      tags:
+      - "Users"
+      summary: "Get a single entry"
+      description: "Returns an object containing details of a particular  entry"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "entryId"
+        description: "the required ID to be returned"
+        required: true
+      responses:
+        200:
+          description: "Entry Details"
+        404:
+          description: "entry not found"
+        401:
+          description: "Token not provided"
+        500:
+          description: "Server Error or Invalid token"
+  api/v1/entries/:
+    post:
+      tags:
+      - "Entries"
+      summary: "Create an entry"
+      description: "Creates a diary entry"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successfully created"
+        400:
+          description: "Incomplete values or bad request"
+        401:
+          description: "No token Provided"
+        500:
+          description: "Server Error or Invalid token"
+  api/v1/entries/:entryId/:
+     put:
+       tags:
+       - "Entries"
+       summary: "Modify an entry"
+       description: "Modifies a diary entry"
+       produces:
+       - "application/json"
+       responses:
+         200:
+           description: "successful"
+         400:
+           description: "Incomplete values or bad request"
+         401:
+            description: "No token provided"
+         500:
+           description: "Server Error or Invalid token"
+  api/v1/auth/signup:
+    post:
+      tags:
+      - "Articles"
+      summary: "Creates a new user"
+      description: "A new user is created and a token is given to be able to access protected routes(endpoints)"
+      produces:
+      - "application/json"
+      responses:
+        201:
+          description: "successfully created"
+        500:
+          description: "server Error"
+          schema:
+            $ref: "#/definitions/User"
+  api/v1/auth/login:
+    post:
+      tags:
+      - "User"
+      summary: "Logs in an existing user"
+      description: "The logged in user gets a token to be able to access protected routes "
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "The email for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successfully logged in"
+          schema:
+            type: "string"
+        401:
+          description: "Invalid email or password"
+          schema:
+            $ref: "#/definitions/User"
+securityDefinitions:
+  api_key:
+    name: "token"
+    in: "header"
+definitions:
+  createEntry:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      title:
+        type: "string"
+      category:
+        type: "string"
+      subCategory:
+        type: "string"
+      content:
+        type: "string"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+

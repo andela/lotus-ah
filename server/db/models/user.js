@@ -1,6 +1,16 @@
 
 const user = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    roleId: {
+      type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
+      defaultValue: 2,
+      references: {
+        model: 'roles',
+        key: 'id',
+        as: 'roleId'
+      }
+    },
     firstname: {
       type: DataTypes.STRING,
       allowNull: true
