@@ -8,13 +8,15 @@ module.exports = {
     },
     username: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     firstname: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: true
     },
     lastname: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: true
     },
     email: {
       type: Sequelize.STRING,
@@ -25,23 +27,28 @@ module.exports = {
       allowNull: true
     },
     bio: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: true
     },
     userImage: {
       type: Sequelize.STRING,
+      allowNull: true
     },
     isPremium: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      allowNull: true
     },
     isSuspended: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     },
     isActivated: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
     favouriteTags: {
-      type: Sequelize.ARRAY(Sequelize.TEXT)
+      type: Sequelize.ARRAY(Sequelize.TEXT),
+      allowNull: true
     },
     createdAt: {
       allowNull: false,
