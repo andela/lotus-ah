@@ -134,4 +134,26 @@ describe('User Controller', () => {
         done();
       });
   });
+  it('should return 200 for loging in with correct user details', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send({ email: email.email1, password: 'georgina1' })
+      .end((error, result) => {
+        expect(result.status).to.not.eql(400);
+        expect(result.status).to.eql(200);
+        expect(result.body).to.be.a('object');
+        done();
+      });
+  });
+  it('should return 400 for loging in with incorrect user details', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send({ email: email.email2, password: 'obulaworld' })
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body).to.be.a('object');
+        done();
+      });
+  });
 });
