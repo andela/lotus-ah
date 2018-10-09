@@ -3,3 +3,6 @@ coverage
 
 # nyc test coverage
 .nyc_output
+
+# unused react file
+/client

@@ -3,7 +3,7 @@ import users from './users';
 import auth from './auth';
 import createUser from '../../fixtures/user';
 import articles from './articles';
-import socialAuth from './social_auth_routes';
+import socialAuth from './socialAuthRoutes';
 
 const router = Router();
 router.use('/', users);

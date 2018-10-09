@@ -3,15 +3,18 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import errorhandler from 'errorhandler';
 
 // routes
 import passport from 'passport';
 import router from './server/routes';
-import passportSetup from './server/config/passport';
+import passportSetup from './server/config/passportConfig';
+import config from './server/config/config';
 
-
-const isProduction = process.env.NODE_ENV === 'production';
+dotenv.config();
+passportSetup();
+const isProduction = config.production;
 
 // Create global app object
 const app = express();
