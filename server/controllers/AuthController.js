@@ -36,7 +36,7 @@ class AuthController {
             });
         }
         // Sing token
-        const token = jwt.sign({ userId: result.id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ userId: result.id }, process.env.SECRET, {
           expiresIn: '1hr',
         });
         const link = `/api/v1/auth/reset_password?token=${token}`;
@@ -49,7 +49,7 @@ class AuthController {
             link,
           });
       })
-      .catch(error => error);
+      .catch(error => console.log(error));
   }
 
 

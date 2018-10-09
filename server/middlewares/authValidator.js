@@ -17,7 +17,7 @@ const validator = {
 */
   verifyRestPasswordToken: (request, response, next) => {
     const { token } = request.query;
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
       if (err) {
         response.status(401)
           .json({
