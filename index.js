@@ -1,8 +1,11 @@
+// third-party libraries
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
+
+// routes
 import router from './server/routes';
 
 
@@ -15,14 +18,11 @@ app.use(cors());
 
 // Normal express config defaults
 app.use(require('morgan')('dev'));
+app.use(require('method-override')());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-app.use(require('method-override')());
-
 app.use(express.static(`${__dirname}/public`));
-
 app.use(
   session({
     secret: 'authorshaven',
@@ -35,7 +35,6 @@ app.use(
 if (!isProduction) {
   app.use(errorhandler());
 }
-
 
 app.use(router);
 
@@ -81,4 +80,5 @@ app.use((err, req, res) => {
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${server.address().port}`);
 });
+
 export default app;
