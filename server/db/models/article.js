@@ -24,7 +24,14 @@ const article = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-
+    userId: {
+      type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'User',
+        key: 'id'
+      }
+    }
   });
 
   Article.associate = (models) => {
@@ -37,7 +44,7 @@ const article = (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'comments'
     });
-    Article.belongsToMany(models.tag, {
+    Article.belongsToMany(models.Tag, {
       through: 'articleTag',
     });
   };

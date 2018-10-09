@@ -35,12 +35,11 @@ class UserController {
         if (!created) {
           const { isActivated } = user.dataValues;
           if (isActivated === false) {
-            EmailController.validationEmail(user.dataValues);
-            const userToken = auth.authenticate(user.dataValues);
+            const result = EmailController.validationEmail(user.dataValues);
             return response.status(200).json({
               status: 'Success',
               message: 'A verification email has been resent to this email',
-              token: userToken
+              token: result.token
             });
           }
           return response.status(409).json({
@@ -48,12 +47,11 @@ class UserController {
             message: 'Email exists'
           });
         }
-        EmailController.validationEmail(user.dataValues);
-        const userToken = auth.authenticate(user.dataValues);
+        const result = EmailController.validationEmail(user.dataValues);
         return response.status(201).json({
           message: 'A verification email has been sent to this email ',
-          token: userToken,
-          user
+          user,
+          token: result.token
         });
       });
   }
@@ -99,12 +97,17 @@ class UserController {
       username
     };
     userDetails.password = bcrypt.hashSync(userDetails.password, 10);
-    User.update(userDetails, { where: { id: request.decoded.id } })
-      .then(user => response.status(200).json({
-        status: 'success',
-        message: 'User Update was Successfull',
-        user
-      }))
+    User.update(userDetails, { where: { id: request.decoded.id }, returning: true, plain: true })
+      .then((user) => {
+        const userToken = auth.authenticate({
+          id: user[1].dataValues.id, email: user[1].dataValues.email
+        });
+        response.status(200).json({
+          status: 'success',
+          message: 'User Update was Successfull',
+          token: userToken,
+        });
+      })
       .catch((err) => { console.log(err.message); });
   }
 
@@ -120,6 +123,12 @@ class UserController {
     const { email, password } = request.body;
     User.findOne({ where: { email } })
       .then((user) => {
+        if (!user) {
+          response.status(400).json({
+            status: 'failed',
+            message: 'Email does not exist'
+          });
+        }
         const check = bcrypt.compareSync(password, user.dataValues.password);
         if (check) {
           const userToken = auth.authenticate(user.dataValues);
@@ -136,7 +145,7 @@ class UserController {
             message: 'Incorrect Email or Password'
           });
         }
-      }).catch(err => err.message);
+      }).catch(err => console.log(err));
   }
 }
 export default UserController;

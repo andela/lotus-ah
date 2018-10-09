@@ -1,6 +1,6 @@
 
 const tag = (sequelize, DataTypes) => {
-  const Tag = sequelize.define('tag', {
+  const Tag = sequelize.define('Tag', {
     name: {
       type: DataTypes.STRING
     }
@@ -8,7 +8,7 @@ const tag = (sequelize, DataTypes) => {
   Tag.associate = (models) => {
     Tag.belongsToMany(models.Article, {
       as: 'tagArticle',
-      through: 'articleTag',
+      through: 'ArticleTag',
     });
   };
   return Tag;
