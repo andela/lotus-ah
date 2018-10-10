@@ -11,7 +11,8 @@ const notification = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-  }, {
+  },
+  {
     timestamps: false
   });
 

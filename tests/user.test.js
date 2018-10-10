@@ -60,7 +60,7 @@ describe('User Controller', () => {
       .get('/api/v1/users')
       .query({ token: tokenCollect })
       .end((error, result) => {
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(200);
         expect(result.body).to.be.a('object');
         done();
       });
@@ -105,7 +105,7 @@ describe('User Controller', () => {
       .send(userDetails)
       .query({ token: tokenCollect })
       .end((error, result) => {
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(200);
         expect(result.body).to.be.a('object');
         done();
       });

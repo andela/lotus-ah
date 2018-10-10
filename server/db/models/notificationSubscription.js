@@ -10,6 +10,9 @@ const notificationSubscription = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     }
+  },
+  {
+    tableName: 'notification_subscription'
   });
 
   NotificationSubscription.associate = (models) => {

@@ -58,7 +58,10 @@ const user = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
-    }
+    },
+  },
+  {
+    tableName: 'users'
   });
 
   User.associate = (models) => {
@@ -87,6 +90,10 @@ const user = (sequelize, DataTypes) => {
       as: 'following',
       through: models.Follow,
       foreignKey: 'followinId'
+    });
+    User.hasMany(models.FavoriteArticle, {
+      foreignKey: 'userId',
+      as: 'favorites'
     });
   };
   return User;
