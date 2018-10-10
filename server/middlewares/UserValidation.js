@@ -89,6 +89,7 @@ const validation = {
   */
   checkRequiredDetails(request, response, next) {
     const values = request.body;
+    console.log(request.file);
     const { password } = values;
     const required = ['firstname',
       'lastname', 'username', 'password', 'bio'];
@@ -118,8 +119,41 @@ const validation = {
         message: 'Password should contain atleast one number and one alphabet'
       });
     }
+    request.body.fileUrl = request.image ? request.image.secure_url : '';
     next();
   },
+
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @param {function} next
+  * @description Checks if user details are defined and are valid
+  * @return {object} object
+  * @memberof UserValidation
+  */
+  checkUserDetails(request, response, next) {
+    const values = request.body;
+    const required = ['firstname',
+      'lastname', 'bio'];
+    let pass = true;
+    const errors = {};
+    for (let i = 0; i < required.length; i += 1) {
+      if (!values[required[i]] || !values[required[i]].replace(/\s/g, '').length) {
+        pass = false;
+        errors[required[i]] = `${required[i]} is required`;
+      }
+    }
+    if (!pass) {
+      return response.status(400).json({
+        status: 'failed',
+        message: errors
+      });
+    }
+    request.body.fileUrl = request.image ? request.image.secure_url : '';
+    next();
+  },
+
 
   /**
   * @static
@@ -142,6 +176,45 @@ const validation = {
     next();
   },
 
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @param {function} next
+  * @description Checks if the id sent with the user profile route is valid
+  * @return {object} object
+  * @memberof UserValidation
+  */
+  checkProfileId(request, response, next) {
+    const { id } = request.params;
+    if (!validation.isDefined(id) || !parseInt(id, 10)) {
+      return response.status(400).json({
+        status: 'failed',
+        message: 'The id provided must be an integer.'
+      });
+    }
+    next();
+  },
+
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @param {function} next
+  * @description Checks if the id sent is th same with the token id
+  * @return {object} object
+  * @memberof UserValidation
+  */
+  compareId(request, response, next) {
+    const { id } = request.params;
+    if (parseInt(id, 10) !== parseInt(request.decoded.id, 10)) {
+      return response.status(400).json({
+        status: 'failed',
+        message: 'The is not your account.'
+      });
+    }
+    next();
+  },
 
 };
 
