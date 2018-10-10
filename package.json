@@ -13,13 +13,12 @@
     "undo:migration": "sequelize db:migrate:undo:all",
     "migrate:dev": "export NODE_ENV=development && sequelize db:migrate:undo:all && sequelize db:migrate",
     "migration:test": " cross-env NODE_ENV=test sequelize db:migrate",
-    "lint": "eslint . --fix",
-    "pretest": "npm run lint && npm run undo && npm run migration:test",
-    "test": "cross-env NODE_ENV=test nyc mocha --compilers js:@babel/register --timeout 10000 tests/*.test.js --exit",
+    "pretest": "npm run lint:server && npm run undo && npm run migration:test",
+    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --compilers js:@babel/core --timeout 10000 tests/**/*.test.js --exit",
     "undo": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
-    "coverage": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter spec --require @babel/register tests/**/*.test.js --exit",
-    "coveralls": "npm run coverage -- --report lcovonly && cat coverage/lcov.info | coveralls"
-  },
+    "coverage": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter spec --require @babel/register  tests/**/*.test.js --exit",
+    "coveralls": "npm run pretest && npm run coverage -- --report lcovonly && cat coverage/lcov.info | coveralls"
+    },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
@@ -67,6 +66,7 @@
     "slug": "^0.9.1",
     "underscore": "^1.9.1",
     "uuid": "^3.3.2",
+    "validator": "^10.8.0",
     "validatorjs": "^3.14.2",
     "yarn": "^1.10.1"
   },
@@ -76,6 +76,7 @@
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
