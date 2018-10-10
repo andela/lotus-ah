@@ -1,7 +1,8 @@
 import slug from 'slug';
 import uuid from 'uuid';
 
-import { Article } from '../db/models';
+import { Article, FavoriteArticle } from '../db/models';
+
 
 /**
  * @class ArticleController
@@ -23,6 +24,7 @@ class ArticleController {
       body
     } = req.body;
     const userId = req.decoded.id;
+    console.log(userId);
     let imageUrl = null;
     if (req.file) {
       imageUrl = req.file.path;
@@ -271,6 +273,116 @@ class ArticleController {
         message: 'Error processing request, please try again',
         Error: err.toString()
       }));
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description add article to user favorite list
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static addFavourite(req, res) {
+    const articleId = req.params.id;
+    const userId = req.decoded.id;
+    console.log(userId);
+    Article.findOne({
+      where: { id: articleId }
+    })
+      .then(article => article)
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({ status: 'Success', message: 'Article does not exist' });
+        }
+        return FavoriteArticle.findOrCreate({
+          include: [{
+            model: Article,
+          }],
+          where: { userId, articleId }
+        });
+      })
+      .then((result) => {
+        res.status(200)
+          .json({
+            status: 'Success',
+            message: 'Article added to favorite',
+            article: result,
+          });
+      })
+      .catch(() => res.status(500)
+        .json(
+          {
+            status: 'Failed',
+            message: 'Problem favouriting article',
+          }
+        ));
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description remove an article from user list
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static removeFavourite(req, res) {
+    const userId = req.decoded.id;
+    const articleId = req.params.id;
+    Article.findOne({
+      where: { id: articleId }
+    })
+      .then(article => article)
+      .then((article) => {
+        if (!article) {
+          return res.status(404).json({ status: 'Success', message: 'Article does not exist' });
+        }
+        return FavoriteArticle.destroy({
+          where: { userId, articleId }
+        });
+      })
+      .then(() => res.status(200)
+        .json(
+          {
+            status: 'Success',
+            message: 'Article removed from favourite',
+          }
+        ))
+      .catch(() => res.status(500)
+        .json(
+          {
+            status: 'Failed',
+            message: 'Problem removing article from favorite'
+          }
+        ));
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description returns all user favorite articles
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static getAllFavorite(req, res) {
+    const userId = req.decoded.id;
+    FavoriteArticle.findAll({
+      include: [
+        {
+          model: Article,
+        },
+      ],
+      where: { userId, }
+    }).then(result => res.status(200).json({ status: 'Success', result }))
+      .catch(error => res.status(500).json({ status: 'Failed', Error: error.toString() }));
   }
 }
 export default ArticleController;

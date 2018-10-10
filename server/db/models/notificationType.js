@@ -10,6 +10,9 @@ const notificationType = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     }
+  },
+  {
+    tableName: 'notification_types'
   });
   return NotificationType;
 };

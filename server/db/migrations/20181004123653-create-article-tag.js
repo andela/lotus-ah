@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('ArticleTags', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('article_tags', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -10,7 +10,7 @@ module.exports = {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Tags',
+        model: 'tags',
         key: 'id',
         as: 'tagId',
       }
@@ -19,7 +19,7 @@ module.exports = {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Articles',
+        model: 'articles',
         key: 'id',
         as: 'articleId',
       }
@@ -33,5 +33,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('ArticleTags')
+  down: queryInterface => queryInterface.dropTable('article_tags')
 };

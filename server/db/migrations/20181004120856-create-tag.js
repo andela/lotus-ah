@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Tags', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('tags', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -19,5 +19,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Tags')
+  down: queryInterface => queryInterface.dropTable('tags')
 };
