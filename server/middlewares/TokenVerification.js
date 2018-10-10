@@ -45,7 +45,7 @@ const auth = {
   * @return {object} object
   */
   verifyUserToken(request, response, next) {
-    const { token } = request.query;
+    const token = request.query.token || request.body.token || request.headers['x-access-token'];
     if (!token) {
       return response.status(400).json({
         status: 'failed',

@@ -39,7 +39,7 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: true
     },
-    userImage: {
+    imageUrl: {
       type: Sequelize.STRING,
       allowNull: true
     },

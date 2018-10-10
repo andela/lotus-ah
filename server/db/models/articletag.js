@@ -1,5 +1,5 @@
 const articletag = (sequelize, DataTypes) => {
-  const articleTag = sequelize.define('articleTag', {
+  const ArticleTag = sequelize.define('ArticleTag', {
     tagId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -9,15 +9,15 @@ const articletag = (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {});
-  articleTag.associate = (models) => {
-    articleTag.belongsTo(models.Article, {
+  ArticleTag.associate = (models) => {
+    ArticleTag.belongsTo(models.Article, {
       foreignKey: 'articleId'
     });
-    articleTag.belongsTo(models.tag, {
+    ArticleTag.belongsTo(models.Tag, {
       foreignKey: 'tagId'
     });
   };
-  return articleTag;
+  return ArticleTag;
 };
 
 export default articletag;

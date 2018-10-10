@@ -1,12 +1,6 @@
 
 const user = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
-    },
     firstname: {
       type: DataTypes.STRING,
       allowNull: true
@@ -47,7 +41,7 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    userImage: {
+    imageUrl: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -67,8 +61,7 @@ const user = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasMany(models.Article, {
-      foreignKey: 'userId',
-      as: 'articles'
+      foreignKey: 'userId'
     });
     User.hasMany(models.Comment, {
       foreignKey: 'userId',
