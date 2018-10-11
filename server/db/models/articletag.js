@@ -8,7 +8,7 @@ const articletag = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, {});
+  }, { tableName: 'article_tags' });
   ArticleTag.associate = (models) => {
     ArticleTag.belongsTo(models.Article, {
       foreignKey: 'articleId'

@@ -11,9 +11,7 @@ const notificationType = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   },
-  {
-    tableName: 'notification_types'
-  });
+  { tableName: 'notification_types' });
   return NotificationType;
 };
 export default notificationType;
