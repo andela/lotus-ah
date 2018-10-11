@@ -39,14 +39,20 @@ class ArticleController {
       body,
       imageUrl
     })
-      .then(createdArticle => res.status(201).json({
-        message: 'Published article successfully',
-        createdArticle
-      }))
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString(),
-      }));
+      .then((createdArticle) => {
+        res.status(201)
+          .json({
+            message: 'Published article successfully',
+            createdArticle
+          });
+      })
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString(),
+          });
+      });
   }
 
   /**
@@ -67,9 +73,10 @@ class ArticleController {
       imageUrl = null;
 
     if (!(Number.isInteger(id)) && !Number(id)) {
-      return res.status(400).json({
-        message: 'Article ID must be a number',
-      });
+      return res.status(400)
+        .json({
+          message: 'Article ID must be a number',
+        });
     }
 
     Article.findOne({
@@ -94,19 +101,25 @@ class ArticleController {
             }
           };
           return Article.update(value, condition)
-            .then(() => res.status(200).json({
-              message: 'Article updated successfully'
-            }));
+            .then(() => {
+              res.status(200)
+                .json({
+                  message: 'Article updated successfully'
+                });
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -139,19 +152,25 @@ class ArticleController {
               id,
             }
           })
-            .then(() => res.status(200).json({
-              message: 'Article deleted successfully',
-            }));
+            .then(() => {
+              res.status(200)
+                .json({
+                  message: 'Article deleted successfully',
+                });
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -180,16 +199,20 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'All articles for a user displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'All articles for a user displayed',
+              Articles: articles
+            });
         }
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -226,20 +249,24 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'Single article displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'Single article displayed',
+              Articles: articles
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -263,16 +290,20 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'All article displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'All article displayed',
+              Articles: articles
+            });
         }
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
