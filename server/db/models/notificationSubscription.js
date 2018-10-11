@@ -11,9 +11,7 @@ const notificationSubscription = (sequelize, DataTypes) => {
       defaultValue: true
     }
   },
-  {
-    tableName: 'notification_subscription'
-  });
+  { tableName: 'notification_subscription' });
 
   NotificationSubscription.associate = (models) => {
     NotificationSubscription.belongsTo(models.User, {

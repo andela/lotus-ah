@@ -11,10 +11,17 @@ const notification = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-  },
-  {
-    timestamps: false
-  });
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+  }, { tableName: 'notifications' });
 
   Notificatioin.associate = (models) => {
     Notificatioin.belongsTo(models.User, {

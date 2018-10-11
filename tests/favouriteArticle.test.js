@@ -20,7 +20,9 @@ before((done) => {
       'chigodwin1',
     )).end((err, res) => {
       expect(res.statusCode).to.equal(200);
-      if (err) return done(err);
+      if (err) {
+        done(err);
+      }
       userToken = res.body.token;
       done();
     });
@@ -43,9 +45,9 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(201);
+        expect(res.status).to.equal(201);
         expect(message).to.equal('Published article successfully');
-        return done();
+        done();
       });
   });
 
@@ -59,7 +61,7 @@ describe('Test article Controller', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Article added to favorite');
-        return done();
+        done();
       });
   });
 
@@ -73,7 +75,7 @@ describe('Test article Controller', () => {
       .end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body.message).to.equal('Article does not exist');
-        return done();
+        done();
       });
   });
 
@@ -87,7 +89,7 @@ describe('Test article Controller', () => {
         expect(res.status).to.equal(200);
         expect(res.body.status).to.equal('Success');
         expect(res.body.result).to.an('array');
-        return done();
+        done();
       });
   });
 
@@ -101,7 +103,7 @@ describe('Test article Controller', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Article removed from favourite');
-        return done();
+        done();
       });
   });
 });

@@ -33,9 +33,7 @@ const article = (sequelize, DataTypes) => {
       }
     }
   },
-  {
-    tableName: 'articles'
-  });
+  { tableName: 'articles' });
 
   Article.associate = (models) => {
     // associations can be defined here

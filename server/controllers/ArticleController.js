@@ -295,7 +295,11 @@ class ArticleController {
       .then(article => article)
       .then((article) => {
         if (!article) {
-          return res.status(404).json({ status: 'Success', message: 'Article does not exist' });
+          return res.status(404)
+            .json({
+              status: 'Success',
+              message: 'Article does not exist',
+            });
         }
         return FavoriteArticle.findOrCreate({
           include: [{
@@ -313,12 +317,10 @@ class ArticleController {
           });
       })
       .catch(() => res.status(500)
-        .json(
-          {
-            status: 'Failed',
-            message: 'Problem favouriting article',
-          }
-        ));
+        .json({
+          status: 'Failed',
+          message: 'Problem favouriting article',
+        }));
   }
 
   /**
@@ -327,7 +329,7 @@ class ArticleController {
    * @static
    * @param { object } req
    * @param { object } res
-   * @description remove an article from user list
+   * @description remove an article from favourite
    * @memberof ArticleFixture
    * @returns { object } object
    */
@@ -340,7 +342,11 @@ class ArticleController {
       .then(article => article)
       .then((article) => {
         if (!article) {
-          return res.status(404).json({ status: 'Success', message: 'Article does not exist' });
+          return res.status(404)
+            .json({
+              status: 'Success',
+              message: 'Article does not exist',
+            });
         }
         return FavoriteArticle.destroy({
           where: { userId, articleId }
@@ -353,13 +359,13 @@ class ArticleController {
             message: 'Article removed from favourite',
           }
         ))
-      .catch(() => res.status(500)
-        .json(
-          {
+      .catch(() => {
+        res.status(500)
+          .json({
             status: 'Failed',
             message: 'Problem removing article from favorite'
-          }
-        ));
+          });
+      });
   }
 
   /**
@@ -381,8 +387,20 @@ class ArticleController {
         },
       ],
       where: { userId, }
-    }).then(result => res.status(200).json({ status: 'Success', result }))
-      .catch(error => res.status(500).json({ status: 'Failed', Error: error.toString() }));
+    }).then((result) => {
+      res.status(200)
+        .json({
+          status: 'Success',
+          result
+        });
+    })
+      .catch(() => {
+        res.status(500)
+          .json({
+            status: 'Failed',
+            message: 'Problem finding favourite article',
+          });
+      });
   }
 }
 export default ArticleController;

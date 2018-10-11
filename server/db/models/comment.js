@@ -5,8 +5,7 @@ const comment = (sequelize, DataTypes) => {
     commentBody: {
       type: DataTypes.STRING
     },
-
-  });
+  }, { tableName: 'comments' });
   Comment.associate = (models) => {
     // associations can be defined here
     Comment.belongsTo(models.User, {

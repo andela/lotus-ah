@@ -15,8 +15,7 @@ const follow = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER
     }
-  },
-  {
+  }, {
     tableName: 'follows',
     timestamps: false
   });

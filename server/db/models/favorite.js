@@ -8,10 +8,7 @@ const favoriteArticles = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-  },
-  {
-    tableName: 'favourite_articles'
-  });
+  }, { tableName: 'favourite_articles' });
   FavoriteArticle.associate = (models) => {
     FavoriteArticle.belongsTo(models.Article, {
       foreignKey: 'articleId',
