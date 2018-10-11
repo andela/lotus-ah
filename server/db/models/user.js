@@ -25,6 +25,12 @@ const user = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
+    socialId: {
+      type: DataTypes.STRING,
+    },
+    provider: {
+      type: DataTypes.STRING,
+    },
     bio: {
       type: DataTypes.TEXT,
       allowNull: true

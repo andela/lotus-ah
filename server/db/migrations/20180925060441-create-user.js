@@ -35,6 +35,12 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: true
     },
+    socialId: {
+      type: Sequelize.STRING,
+    },
+    provider: {
+      type: Sequelize.STRING,
+    },
     bio: {
       type: Sequelize.STRING,
       allowNull: true
