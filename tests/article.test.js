@@ -118,7 +118,6 @@ describe('Test article Controller', () => {
         return done();
       });
   });
-
   it('should update a specific user article', (done) => {
     chai.request(app)
       .put('/api/v1/articles/user/1')
