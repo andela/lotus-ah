@@ -1,4 +1,3 @@
-
 const follow = (sequelize, DataTypes) => {
   const Follow = sequelize.define('Follow', {
     id: {

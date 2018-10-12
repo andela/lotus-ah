@@ -6374,7 +6374,7 @@ sequelize-cli@^4.1.1:
     umzug "^2.1.0"
     yargs "^8.0.2"
 
-sequelize@^4.38.1:
+sequelize@^4.39.0:
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-4.39.0.tgz#0e070a4705367e4b0779183f812c72f478ff12b9"
   dependencies:
