@@ -442,17 +442,20 @@ class ArticleController {
             model: Article,
           }],
           where: { userId, articleId }
+        }).then((result) => {
+          res.status(200)
+            .json({
+              status: 'Success',
+              message: 'Article added to favorite',
+              article: result,
+            });
         });
       })
-      .then(result => res.status(200).json({
-        status: 'Success',
-        message: 'Article added to favorite',
-        article: result,
-      }))
-      .catch(() => res.status(500).json({
-        status: 'Failed',
-        message: 'Problem favouriting article',
-      }));
+      .catch(() => res.status(500)
+        .json({
+          status: 'Failed',
+          message: 'Problem favouriting article',
+        }));
   }
 
   /**

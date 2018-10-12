@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import users from './users';
 import auth from './auth';
+import bookmark from './bookmark';
 
 // Import fixtures
 import createUser from '../../fixtures/user';
@@ -11,6 +12,7 @@ const router = Router();
 router.use('/', users);
 router.use('/', auth);
 router.use('/', articles);
+router.use('/', bookmark);
 
 
 /*       ******** Fixture routes ****************

@@ -2,7 +2,6 @@
 import { Router } from 'express';
 import ArticleController from '../../controllers/ArticleController';
 import TagController from '../../controllers/TagController';
-
 import multerUploads from '../../config/multer/multerConfig';
 import {
   articleValidation,

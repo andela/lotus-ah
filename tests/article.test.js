@@ -12,6 +12,7 @@ before(userSeeder.addUserToDb);
 
 let userToken;
 
+
 before((done) => {
   chai.request(app)
     .post('/api/v1/login')
@@ -44,7 +45,7 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(201);
+        expect(res.statusCode).to.equal(200);
         expect(message).to.equal('Published article successfully');
         return done();
       });
