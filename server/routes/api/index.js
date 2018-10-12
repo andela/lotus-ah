@@ -7,7 +7,6 @@ import createUser from '../../fixtures/user';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
 
-
 const router = Router();
 router.use('/', users);
 router.use('/', auth);
