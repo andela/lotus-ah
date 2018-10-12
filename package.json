@@ -18,7 +18,7 @@
     "undo": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
     "coverage": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter spec --require @babel/register  tests/**/*.test.js --exit",
     "coveralls": "npm run pretest && npm run coverage -- --report lcovonly && cat coverage/lcov.info | coveralls"
-    },
+  },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {

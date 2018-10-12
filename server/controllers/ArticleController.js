@@ -1,7 +1,8 @@
 import slug from 'slug';
 import uuid from 'uuid';
 
-import { Article } from '../db/models';
+import { Article, FavoriteArticle } from '../db/models';
+
 
 /**
  * @class ArticleController
@@ -23,6 +24,7 @@ class ArticleController {
       body
     } = req.body;
     const userId = req.decoded.id;
+    console.log(userId);
     let imageUrl = null;
     if (req.file) {
       imageUrl = req.file.path;
@@ -37,14 +39,20 @@ class ArticleController {
       body,
       imageUrl
     })
-      .then(createdArticle => res.status(201).json({
-        message: 'Published article successfully',
-        createdArticle
-      }))
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString(),
-      }));
+      .then((createdArticle) => {
+        res.status(201)
+          .json({
+            message: 'Published article successfully',
+            createdArticle
+          });
+      })
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString(),
+          });
+      });
   }
 
   /**
@@ -65,9 +73,10 @@ class ArticleController {
       imageUrl = null;
 
     if (!(Number.isInteger(id)) && !Number(id)) {
-      return res.status(400).json({
-        message: 'Article ID must be a number',
-      });
+      return res.status(400)
+        .json({
+          message: 'Article ID must be a number',
+        });
     }
 
     Article.findOne({
@@ -92,19 +101,25 @@ class ArticleController {
             }
           };
           return Article.update(value, condition)
-            .then(() => res.status(200).json({
-              message: 'Article updated successfully'
-            }));
+            .then(() => {
+              res.status(200)
+                .json({
+                  message: 'Article updated successfully'
+                });
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -137,19 +152,25 @@ class ArticleController {
               id,
             }
           })
-            .then(() => res.status(200).json({
-              message: 'Article deleted successfully',
-            }));
+            .then(() => {
+              res.status(200)
+                .json({
+                  message: 'Article deleted successfully',
+                });
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -178,16 +199,20 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'All articles for a user displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'All articles for a user displayed',
+              Articles: articles
+            });
         }
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -224,20 +249,24 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'Single article displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'Single article displayed',
+              Articles: articles
+            });
         }
-
-        res.status(404).json({
-          message: 'Article not found or has been deleted',
-        });
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
   }
 
   /**
@@ -261,16 +290,148 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
-          return res.status(200).json({
-            message: 'All article displayed',
-            Articles: articles
-          });
+          return res.status(200)
+            .json({
+              message: 'All article displayed',
+              Articles: articles
+            });
         }
       })
-      .catch(err => res.status(500).json({
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      .catch((err) => {
+        res.status(500)
+          .json({
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description add article to user favorite list
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static addFavourite(req, res) {
+    const articleId = req.params.id;
+    const userId = req.decoded.id;
+    console.log(userId);
+    Article.findOne({
+      where: { id: articleId }
+    })
+      .then(article => article)
+      .then((article) => {
+        if (!article) {
+          return res.status(404)
+            .json({
+              status: 'Success',
+              message: 'Article does not exist',
+            });
+        }
+        return FavoriteArticle.findOrCreate({
+          include: [{
+            model: Article,
+          }],
+          where: { userId, articleId }
+        });
+      })
+      .then((result) => {
+        res.status(200)
+          .json({
+            status: 'Success',
+            message: 'Article added to favorite',
+            article: result,
+          });
+      })
+      .catch(() => res.status(500)
+        .json({
+          status: 'Failed',
+          message: 'Problem favouriting article',
+        }));
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description remove an article from favourite
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static removeFavourite(req, res) {
+    const userId = req.decoded.id;
+    const articleId = req.params.id;
+    Article.findOne({
+      where: { id: articleId }
+    })
+      .then(article => article)
+      .then((article) => {
+        if (!article) {
+          return res.status(404)
+            .json({
+              status: 'Success',
+              message: 'Article does not exist',
+            });
+        }
+        return FavoriteArticle.destroy({
+          where: { userId, articleId }
+        });
+      })
+      .then(() => res.status(200)
+        .json(
+          {
+            status: 'Success',
+            message: 'Article removed from favourite',
+          }
+        ))
+      .catch(() => {
+        res.status(500)
+          .json({
+            status: 'Failed',
+            message: 'Problem removing article from favorite'
+          });
+      });
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param { object } req
+   * @param { object } res
+   * @description returns all user favorite articles
+   * @memberof ArticleFixture
+   * @returns { object } object
+   */
+  static getAllFavorite(req, res) {
+    const userId = req.decoded.id;
+    FavoriteArticle.findAll({
+      include: [
+        {
+          model: Article,
+        },
+      ],
+      where: { userId, }
+    }).then((result) => {
+      res.status(200)
+        .json({
+          status: 'Success',
+          result
+        });
+    })
+      .catch(() => {
+        res.status(500)
+          .json({
+            status: 'Failed',
+            message: 'Problem finding favourite article',
+          });
+      });
   }
 }
 export default ArticleController;

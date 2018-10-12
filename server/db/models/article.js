@@ -32,12 +32,13 @@ const article = (sequelize, DataTypes) => {
         key: 'id'
       }
     }
-  });
+  },
+  { tableName: 'articles' });
 
   Article.associate = (models) => {
     // associations can be defined here
     Article.belongsTo(models.User, {
-      foriegnKey: 'userId',
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
     Article.hasMany(models.Comment, {
@@ -46,6 +47,10 @@ const article = (sequelize, DataTypes) => {
     });
     Article.belongsToMany(models.Tag, {
       through: 'articleTag',
+    });
+    Article.hasMany(models.FavoriteArticle, {
+      foreignKey: 'articleId',
+      as: 'favourite'
     });
   };
   return Article;

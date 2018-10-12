@@ -5,6 +5,9 @@ const role = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.STRING
     }
+  },
+  {
+    tableName: 'role'
   });
 
   Role.associate = (models) => {

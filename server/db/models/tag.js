@@ -4,6 +4,9 @@ const tag = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING
     }
+  },
+  {
+    tableName: 'tag'
   });
   Tag.associate = (models) => {
     Tag.belongsToMany(models.Article, {

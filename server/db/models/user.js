@@ -57,12 +57,17 @@ const user = (sequelize, DataTypes) => {
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE
-    }
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+  },
+  {
+    tableName: 'users'
   });
 
   User.associate = (models) => {
@@ -76,6 +81,25 @@ const user = (sequelize, DataTypes) => {
     User.hasOne(models.Role, {
       foreignKey: 'roleId',
       as: 'roles'
+    });
+    User.hasMany(models.Notification, {
+      foreignKey: 'userId',
+      as: 'notifications'
+    });
+    User.hasOne(models.NotificationSubscription);
+    User.belongsToMany(User, {
+      as: 'followers',
+      through: models.Follow,
+      foreignKey: 'followerId',
+    });
+    User.belongsToMany(User, {
+      as: 'following',
+      through: models.Follow,
+      foreignKey: 'followinId'
+    });
+    User.hasMany(models.FavoriteArticle, {
+      foreignKey: 'userId',
+      as: 'favorites'
     });
   };
   return User;
