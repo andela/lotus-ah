@@ -1,7 +1,9 @@
 import slug from 'slug';
 import uuid from 'uuid';
 
-import { Article, FavoriteArticle, Comment } from '../db/models';
+import {
+  Article, FavoriteArticle, Comment, Tag
+} from '../db/models';
 
 /**
  * @class ArticleController
@@ -9,6 +11,17 @@ import { Article, FavoriteArticle, Comment } from '../db/models';
  * that handles all operations related to Articles.
  */
 class ArticleController {
+  /**
+   * @static
+   * @param {string} title
+   * @memberof ArticleController
+   * @return {string} slug
+   * @description creates slug
+   */
+  static makeSlug(title) {
+    return `${slug(title)}-${uuid()}`;
+  }
+
   /**
    *@description Add a new Article to the Article list
    * @param {object} req http request object
@@ -28,30 +41,50 @@ class ArticleController {
     if (req.file) {
       imageUrl = req.file.path;
     }
+    const articleSlug = ArticleController.makeSlug(title);
+    let tags = req.body.tags || [];
+    if (tags.length > 5) {
+      res.status(400).json({
+        status: 'failed',
+        message: 'Tags should not exceed 5',
+      });
+    }
+    tags = ArticleController.tagIdExist(tags);
 
     Article.create({
       userId,
       title,
-      slug: `${slug(title)}-${uuid()}`,
+      slug: articleSlug,
       rating: null,
       description,
       body,
       imageUrl
     })
-      .then((createdArticle) => {
-        res.status(201)
-          .json({
-            message: 'Published article successfully',
-            createdArticle
+      .then(taggingArticle => taggingArticle.addTags(tags))
+      .then(() => {
+        Article.findOne({
+          where: { slug: articleSlug },
+          include: [{
+            model: Tag,
+            as: 'Tags',
+            attributes: ['name'],
+            through: {
+              attributes: [],
+            }
+          }]
+        })
+          .then((createdArticle) => {
+            res.status(200).json({
+              status: 'success',
+              message: 'Published article successfully',
+              createdArticle
+            });
           });
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            message: 'Error processing request, please try again',
-            Error: err.toString(),
-          });
-      });
+      .catch(err => res.status(500).json({
+        message: 'Error processing request, please try again',
+        Error: err.toString(),
+      }));
   }
 
   /**
@@ -77,7 +110,14 @@ class ArticleController {
           message: 'Article ID must be a number',
         });
     }
-
+    let tags = req.body.tags || [];
+    if (tags.length > 5) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Tags should not exceed 5',
+      });
+    }
+    tags = ArticleController.tagIdExist(tags);
     Article.findOne({
       where: {
         id,
@@ -88,29 +128,32 @@ class ArticleController {
       .then((foundArticle) => {
         if (foundArticle) {
           const value = {
+            id,
+            userId,
             title: (title) || foundArticle.title,
             description: (description) || foundArticle.description,
             body: (body) || foundArticle.body,
             imageUrl: (imageUrl) || foundArticle.imageUrl
           };
-          const condition = {
-            where: {
-              id,
-              userId
-            }
-          };
-          return Article.update(value, condition)
-            .then(() => {
-              res.status(200)
-                .json({
-                  message: 'Article updated successfully'
-                });
+          foundArticle.update(value)
+            .then((tagArticle) => {
+              foundArticle.setTags(tags)
+                .then(() => foundArticle.getTags({ attributes: ['id', 'name'] })
+                  .then((taglink) => {
+                    console.log(taglink);
+                    res.status(200).json({
+                      status: 'success',
+                      message: 'Article updated successfully',
+                      article: tagArticle,
+                      tags: taglink
+                    });
+                  }));
             });
-        }
-        res.status(404)
-          .json({
+        } else {
+          res.status(404).json({
             message: 'Article not found or has been deleted',
           });
+        }
       })
       .catch((err) => {
         res.status(500)
@@ -190,7 +233,16 @@ class ArticleController {
         model: Comment,
         as: 'comments',
         attributes: ['id', 'commentBody', 'userId', 'createdAt']
-      }],
+      },
+      {
+        model: Tag,
+        as: 'Tags',
+        attributes: ['name'],
+        through: {
+          attributes: [],
+        }
+      }
+      ],
       attributes: [
         'userId',
         'title',
@@ -244,6 +296,14 @@ class ArticleController {
         model: Comment,
         as: 'comments',
         attributes: ['id', 'commentBody', 'userId', 'createdAt']
+      },
+      {
+        model: Tag,
+        as: 'Tags',
+        attributes: ['name'],
+        through: {
+          attributes: [],
+        }
       }],
       attributes: [
         'id',
@@ -287,7 +347,21 @@ class ArticleController {
    */
   static getAllArticles(req, res) {
     Article.findAndCountAll({
+      include: [{
+        model: Comment,
+        as: 'comments',
+        attributes: ['id', 'commentBody', 'userId', 'createdAt']
+      },
+      {
+        model: Tag,
+        as: 'Tags',
+        attributes: ['id', 'name'],
+        through: {
+          attributes: [],
+        }
+      }],
       attributes: [
+        'id',
         'userId',
         'title',
         'body',
@@ -296,11 +370,6 @@ class ArticleController {
         'createdAt',
         'updatedAt'
       ],
-      include: [{
-        model: Comment,
-        as: 'comments',
-        attributes: ['id', 'commentBody', 'userId', 'createdAt']
-      }],
     })
       .then((articles) => {
         if (articles) {
@@ -446,6 +515,27 @@ class ArticleController {
             message: 'Problem finding favourite article',
           });
       });
+  }
+
+  /**
+   * @static
+   * @param {*} collectedtags
+   * @memberof ArticleController
+   * @returns {object} result
+   * @description Filter tagId that doesnt exit
+   */
+  static tagIdExist(collectedtags) {
+    const filteredtag = [];
+    for (let i = 0; i < collectedtags.length; i += 1) {
+      Tag.findOne({ where: { id: parseInt(collectedtags[i], 10) } })
+        .then((tag) => {
+          if (tag) {
+            filteredtag.push(collectedtags[i]);
+          }
+        })
+        .catch(error => error.message);
+    }
+    return filteredtag;
   }
 }
 export default ArticleController;
