@@ -20,3 +20,12 @@ export const schemas = {
     description: 'required|string|max:150',
   }
 };
+
+export const tagValidation = (request, response, next) => {
+  const { name } = request.body;
+  const validation = new Validator({ name }, { name: 'required|string|min:1' });
+  if (validation.fails()) {
+    return response.status(400).json({ message: validation.errors.all() });
+  }
+  next();
+};
