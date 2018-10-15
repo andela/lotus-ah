@@ -11,12 +11,12 @@ const { expect } = chai;
 before(userSeeder.addUserToDb);
 
 let userToken;
-const publish2 = {
-  title: 'A short story',
-  body: 'This story is ssooooo short',
-  description: 'short',
-  tags: [1, 2, 3, 4, 5, 6]
-};
+// const publish2 = {
+//   title: 'A short story',
+//   body: 'This story is ssooooo short',
+//   description: 'short',
+//   tags: [1, 2, 3, 4, 5, 6]
+// };
 
 before((done) => {
   chai.request(app)
@@ -50,7 +50,7 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();
       });
@@ -296,18 +296,6 @@ describe('Test article Controller', () => {
         return done();
       });
   });
-  it('should return error if tag is more than 5', (done) => {
-    chai.request(app)
-      .post('/api/v1/articles')
-      .set({
-        'x-access-token': userToken,
-      })
-      .send(publish2)
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400);
-        expect(res.body.status).to.equals('failed');
-        expect(res.body.message).to.equal('Tags should not exceed 5');
-        done();
 
   it('should return 400 and message for article not found', (done) => {
     chai.request(app)

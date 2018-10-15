@@ -79,16 +79,17 @@ class ArticleController {
           }]
         })
           .then((createdArticle) => {
-            res.status(20).json({
-              status: 'success',
+            res.status(201).json({
+              status: 'SUCCESS',
               message: 'Published article successfully',
               createdArticle
             });
           });
       })
       .catch(err => res.status(500).json({
+        status: 'FAILED',
         message: 'Error processing request, please try again',
-        Error: err.toString(),
+        Error: err.toString()
       }));
   }
 

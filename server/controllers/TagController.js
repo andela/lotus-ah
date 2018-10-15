@@ -17,13 +17,16 @@ class TagController {
   static createTag(request, response) {
     const { name } = request.body;
     Tag.findOrCreate({ where: { name } })
-      .then(tag => response.status(201)
-        .json({
-          status: 'success',
-          message: 'Tag was created',
-          tag
-        }))
-      .catch(error => error.message);
+      .then(tag => response.status(201).json({
+        status: 'success',
+        message: 'Tag was created',
+        tag
+      }))
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        error: err.toString()
+      }));
   }
 
   /**
@@ -35,13 +38,16 @@ class TagController {
    */
   static getAllTag(request, response) {
     Tag.findAll()
-      .then(tag => response.status(200)
-        .json({
-          status: 'success',
-          message: 'All tags available',
-          tag
-        }))
-      .catch(error => error.message);
+      .then(tag => response.status(200).json({
+        status: 'success',
+        message: 'All tags available',
+        tag
+      }))
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        error: err.toString()
+      }));
   }
 
   /**
@@ -73,20 +79,22 @@ class TagController {
     })
       .then((article) => {
         if (article) {
-          return response.status(200)
-            .json({
-              status: 'success',
-              message: 'Tags with associated articles successfully obtained',
-              article
-            });
-        }
-        response.status(404)
-          .json({
-            status: 'failed',
-            message: 'Tag id provided does not exist'
+          return response.status(200).json({
+            status: 'success',
+            message: 'Tags with associated articles successfully obtained',
+            article
           });
+        }
+        return response.status(404).json({
+          status: 'failed',
+          message: 'Tag id provided does not exist'
+        });
       })
-      .catch(error => error.message);
+      .catch(error => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        error: error.toString()
+      }));
   }
 
   /**
@@ -118,21 +126,23 @@ class TagController {
     })
       .then((article) => {
         if (!article) {
-          response.status(404)
-            .json({
-              status: 'failed',
-              message: 'Tag name provided does not exist'
-            });
-        } else {
-          response.status(200)
-            .json({
-              status: 'success',
-              message: 'Tags with associated articles successfully obtained',
-              article
-            });
+          return response.status(404).json({
+            status: 'failed',
+            message: 'Tag name provided does not exist'
+          });
         }
+        return response.status(200).json({
+          status: 'success',
+          message: 'Tags with associated articles successfully obtained',
+          article
+        });
       })
-      .catch(error => error.message);
+      .catch(error => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        error: error.toString()
+      }));
   }
 }
+
 export default TagController;
