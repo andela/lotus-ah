@@ -1,7 +1,12 @@
+// THIRD-PARTY LIBRARY
 import slug from 'slug';
 import uuid from 'uuid';
 
-import { Article, FavoriteArticle } from '../db/models';
+import {
+  Article,
+  FavoriteArticle,
+  Reaction
+} from '../db/models';
 
 
 /**
@@ -24,7 +29,6 @@ class ArticleController {
       body
     } = req.body;
     const userId = req.decoded.id;
-    console.log(userId);
     let imageUrl = null;
     if (req.file) {
       imageUrl = req.file.path;
@@ -42,6 +46,7 @@ class ArticleController {
       .then((createdArticle) => {
         res.status(201)
           .json({
+            status: 'SUCCESS',
             message: 'Published article successfully',
             createdArticle
           });
@@ -49,6 +54,7 @@ class ArticleController {
       .catch((err) => {
         res.status(500)
           .json({
+            status: 'FAILED',
             message: 'Error processing request, please try again',
             Error: err.toString(),
           });
@@ -75,6 +81,7 @@ class ArticleController {
     if (!(Number.isInteger(id)) && !Number(id)) {
       return res.status(400)
         .json({
+          status: 'FAILED',
           message: 'Article ID must be a number',
         });
     }
@@ -104,18 +111,21 @@ class ArticleController {
             .then(() => {
               res.status(200)
                 .json({
+                  status: 'SUCCESS',
                   message: 'Article updated successfully'
                 });
             });
         }
         res.status(404)
           .json({
+            status: 'FAILED',
             message: 'Article not found or has been deleted',
           });
       })
       .catch((err) => {
         res.status(500)
           .json({
+            status: 'FAILED',
             message: 'Error processing request, please try again',
             Error: err.toString()
           });
@@ -135,6 +145,7 @@ class ArticleController {
 
     if (!(Number.isInteger(id)) && !Number(id)) {
       return res.status(400).json({
+        status: 'FAILED',
         message: 'Article ID must be a number',
       });
     }
@@ -155,18 +166,21 @@ class ArticleController {
             .then(() => {
               res.status(200)
                 .json({
+                  status: 'SUCCESS',
                   message: 'Article deleted successfully',
                 });
             });
         }
         res.status(404)
           .json({
+            status: 'FAILED',
             message: 'Article not found or has been deleted',
           });
       })
       .catch((err) => {
         res.status(500)
           .json({
+            status: 'FAILED',
             message: 'Error processing request, please try again',
             Error: err.toString()
           });
@@ -201,14 +215,21 @@ class ArticleController {
         if (articles) {
           return res.status(200)
             .json({
-              message: 'All articles for a user displayed',
+              status: 'SUCCESS',
+              message: 'Fetched all articles for a user',
               Articles: articles
             });
         }
+        res.status(404)
+          .json({
+            status: 'FAILED',
+            message: 'Article not found or has been deleted',
+          });
       })
       .catch((err) => {
         res.status(500)
           .json({
+            status: 'FAILED',
             message: 'Error processing request, please try again',
             Error: err.toString()
           });
@@ -228,6 +249,7 @@ class ArticleController {
 
     if (!(Number.isInteger(id)) && !Number(id)) {
       return res.status(400).json({
+        status: 'FAILED',
         message: 'Article ID must be a number',
       });
     }
@@ -251,18 +273,21 @@ class ArticleController {
         if (articles) {
           return res.status(200)
             .json({
-              message: 'Single article displayed',
+              status: 'SUCCESS',
+              message: 'Fetched a single user article',
               Articles: articles
             });
         }
         res.status(404)
           .json({
+            status: 'FAILED',
             message: 'Article not found or has been deleted',
           });
       })
       .catch((err) => {
         res.status(500)
           .json({
+            status: 'FAILED',
             message: 'Error processing request, please try again',
             Error: err.toString()
           });
@@ -279,10 +304,12 @@ class ArticleController {
   static getAllArticles(req, res) {
     Article.findAndCountAll({
       attributes: [
+        'id',
         'userId',
         'title',
         'body',
         'description',
+        'imageUrl',
         'rating',
         'createdAt',
         'updatedAt'
@@ -292,7 +319,8 @@ class ArticleController {
         if (articles) {
           return res.status(200)
             .json({
-              message: 'All article displayed',
+              status: 'SUCCESS',
+              message: 'Fetched all article',
               Articles: articles
             });
         }
@@ -319,11 +347,9 @@ class ArticleController {
   static addFavourite(req, res) {
     const articleId = req.params.id;
     const userId = req.decoded.id;
-    console.log(userId);
     Article.findOne({
       where: { id: articleId }
     })
-      .then(article => article)
       .then((article) => {
         if (!article) {
           return res.status(404)
@@ -339,19 +365,15 @@ class ArticleController {
           where: { userId, articleId }
         });
       })
-      .then((result) => {
-        res.status(200)
-          .json({
-            status: 'Success',
-            message: 'Article added to favorite',
-            article: result,
-          });
-      })
-      .catch(() => res.status(500)
-        .json({
-          status: 'Failed',
-          message: 'Problem favouriting article',
-        }));
+      .then(result => res.status(200).json({
+        status: 'Success',
+        message: 'Article added to favorite',
+        article: result,
+      }))
+      .catch(() => res.status(500).json({
+        status: 'Failed',
+        message: 'Problem favouriting article',
+      }));
   }
 
   /**
@@ -433,5 +455,170 @@ class ArticleController {
           });
       });
   }
+
+  /**
+  * @static
+  * @param {object} req
+  * @param {object} res
+  * @description Like or Dislike of article
+  * @return {object} Object
+  * @memberof UserController
+  */
+  static like(req, res) {
+    const userId = req.decoded.id;
+    const articleId = Number(req.params.articleId);
+    const likes = req.params.likeType === 'like';
+    const dislike = req.params.likeType === 'dislike';
+    const message = likes || dislike ? `you ${req.params.likeType}d the article` : 'you unliked the article';
+
+    if (!(Number.isInteger(articleId)) && !Number(articleId)) {
+      return res.status(400).json({
+        status: 'FAILED',
+        message: 'Article ID must be a number',
+      });
+    }
+    Article.findOne({
+      where: {
+        id: articleId,
+        userId
+      },
+      attributes: [
+        'id',
+        'userId'
+      ]
+    }).then((foundArticle) => {
+      if (!foundArticle) {
+        return res.status(400).json({
+          status: 'FAILED',
+          message: 'Article not found or has been deleted',
+        });
+      }
+
+      return Reaction.findOrCreate({
+        where: {
+          userId,
+          articleId
+        },
+        attributes: ['id', 'userId', 'likes', 'dislike', 'articleId'],
+        defaults: {
+          likes,
+          dislike
+        }
+      })
+        .spread((DBdata, created) => {
+          if (!created) {
+            DBdata.likes = likes;
+            DBdata.dislike = dislike;
+            DBdata.save().catch(() => res.status(400).json({
+              status: 'FAILED',
+              message: 'Article not found or has been deleted',
+            }));
+          }
+          return res.status(200).json({
+            status: 'SUCCESS',
+            DBdata,
+            message
+          });
+        }).catch(err => res.status(500).json({
+          status: 'FAILED',
+          message: 'Error processing request, please try again',
+          error: err.toString()
+        }));
+    }).catch(err => res.status(500).json({
+      status: 'FAILED',
+      message: 'Error processing request, please try again',
+      error: err.toString()
+    }));
+  }
+
+  /**
+  * @static
+  * @param {object} req
+  * @param {object} res
+  * @description Get all Liked article
+  * @return {object} Object
+  * @memberof UserController
+  */
+  static getUserLikedArticles(req, res) {
+    const userId = req.decoded.id;
+    const articleId = Number(req.params.articleId);
+
+    Reaction.findAndCountAll({
+      attributes: ['id', 'userId', 'likes', 'articleId'],
+      where: {
+        userId,
+        articleId,
+        likes: true
+      }
+    })
+      .then((likes) => {
+        if (likes) {
+          return res.status(200)
+            .json({
+              status: 'SUCCESS',
+              message: 'All likes for this articles',
+              likes
+            });
+        }
+        res.status(404)
+          .json({
+            status: 'FAILED',
+            message: 'Article not found or has been deleted',
+          });
+      })
+      .catch((err) => {
+        res.status(500)
+          .json({
+            status: 'FAILED',
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
+  }
+
+  /**
+  * @static
+  * @param {object} req
+  * @param {object} res
+  * @description Get all Disliked article
+  * @return {object} Object
+  * @memberof UserController
+  */
+  static getUserDislikedArticles(req, res) {
+    const userId = req.decoded.id;
+    const articleId = Number(req.params.articleId);
+
+    Reaction.findAndCountAll({
+      attributes: ['id', 'userId', 'dislike', 'articleId'],
+      where: {
+        userId,
+        articleId,
+        likes: false
+      }
+    })
+      .then((likes) => {
+        if (likes) {
+          return res.status(200)
+            .json({
+              status: 'SUCCESS',
+              message: 'All dislikes for this articles',
+              likes
+            });
+        }
+        res.status(404)
+          .json({
+            message: 'Article not found or has been deleted',
+          });
+      })
+      .catch((err) => {
+        res.status(500)
+          .json({
+            status: 'FAILED',
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          });
+      });
+  }
 }
+
 export default ArticleController;

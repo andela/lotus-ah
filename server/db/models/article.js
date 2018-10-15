@@ -45,6 +45,10 @@ const article = (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'comments'
     });
+    Article.hasMany(models.Reaction, {
+      foreignKey: 'articleId',
+      as: 'reactions'
+    });
     Article.belongsToMany(models.Tag, {
       through: 'articleTag',
     });
