@@ -37,6 +37,11 @@ const comment = (sequelize, DataTypes) => {
       as: 'article',
       onDelete: 'CASCADE'
     });
+
+    Comment.hasMany(models.Reaction, {
+      foreignKey: 'userId',
+      as: 'reaction'
+    });
   };
   return Comment;
 };

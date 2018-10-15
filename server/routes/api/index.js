@@ -15,7 +15,7 @@ router.use('/', articles);
 
 /*       ******** Fixture routes ****************
 */
-router.post('/users/create', createUser);
+router.post('/create_dummy_user', createUser);
 
 /*      ********* End fixture routes *************   */
 
