@@ -11,12 +11,6 @@ const { expect } = chai;
 before(userSeeder.addUserToDb);
 
 let userToken;
-// const publish2 = {
-//   title: 'A short story',
-//   body: 'This story is ssooooo short',
-//   description: 'short',
-//   tags: [1, 2, 3, 4, 5, 6]
-// };
 
 before((done) => {
   chai.request(app)
