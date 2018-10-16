@@ -241,8 +241,7 @@ class ArticleController {
         through: {
           attributes: [],
         }
-      }
-      ],
+      }],
       attributes: [
         'userId',
         'title',
