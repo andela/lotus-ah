@@ -103,7 +103,7 @@ describe('Testing Tag Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();
       });

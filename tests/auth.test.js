@@ -13,9 +13,10 @@ const responseObject = {};
 describe('Testing forgot password route', () => {
   it('Should create dummy user', (done) => {
     chai.request(app)
-      .post('/api/v1/users/create')
+      .post('/api/v1/create_dummy_user')
       .send({ email: 'test999@gmail.com' })
       .end((error, response) => {
+        console.log(response.body);
         responseObject.link = response.body.link;
         expect(response.body.status).to.equals('success');
         expect(response.body.message).to.equals('User created successfully');

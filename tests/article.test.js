@@ -11,12 +11,6 @@ const { expect } = chai;
 before(userSeeder.addUserToDb);
 
 let userToken;
-const publish2 = {
-  title: 'A short story',
-  body: 'This story is ssooooo short',
-  description: 'short',
-  tags: [1, 2, 3, 4, 5, 6]
-};
 
 before((done) => {
   chai.request(app)
@@ -50,7 +44,7 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();
       });
@@ -180,7 +174,7 @@ describe('Test article Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(200);
-        expect(message).to.equal('All article displayed');
+        expect(message).to.equal('Fetched all article');
         return done();
       });
   });
@@ -196,7 +190,7 @@ describe('Test article Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(200);
-        expect(message).to.equal('All articles for a user displayed');
+        expect(message).to.equal('Fetched all articles for a user');
         return done();
       });
   });
@@ -228,7 +222,7 @@ describe('Test article Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(200);
-        expect(message).to.equal('Single article displayed');
+        expect(message).to.equal('Fetched a single user article');
         return done();
       });
   });
@@ -296,18 +290,139 @@ describe('Test article Controller', () => {
         return done();
       });
   });
-  it('should return error if tag is more than 5', (done) => {
+
+  it('should return 400 and message for article not found', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/1/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(400);
+        expect(message).to.equal('Article not found or has been deleted');
+        return done();
+      });
+  });
+
+  it('should return 400 when article params is not a number', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/love/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(400);
+        expect(message).to.equal('Article ID must be a number');
+        return done();
+      });
+  });
+
+  it('should add a new article', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
       .set({
         'x-access-token': userToken,
       })
-      .send(publish2)
+      .send(articleSeeder.setArticleData(
+        'Policemen of this days are not yet here!',
+        `Doing good is right but is generally 
+        not common habit you can find on any one cute`,
+        'Doing good is right for you and I',
+        'whtdebjbwwimg.jpg',
+      ))
       .end((err, res) => {
-        expect(res.statusCode).to.equal(400);
-        expect(res.body.status).to.equals('failed');
-        expect(res.body.message).to.equal('Tags should not exceed 5');
-        done();
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(201);
+        expect(message).to.equal('Published article successfully');
+        return done();
+      });
+  });
+
+  it('should like a specific user article', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/2/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('you liked the article');
+        return done();
+      });
+  });
+
+  it('should dislike a specific user article', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/2/dislike')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('you disliked the article');
+        return done();
+      });
+  });
+
+  it('should like a specific user article', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/2/unlike')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('you unliked the article');
+        return done();
+      });
+  });
+
+  it('should fetch all likes for an article', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/2/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('All likes for this articles');
+        return done();
+      });
+  });
+
+  it('should fetch all dislikes for an article', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/2/dislike')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('All dislikes for this articles');
+        return done();
       });
   });
 });

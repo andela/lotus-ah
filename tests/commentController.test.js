@@ -36,7 +36,7 @@ before((done) => {
 
 // Comment controller test
 describe('Test Comment Controller', () => {
-  it('should add a new article', (done) => {
+  it('should add a new comment', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
       .set({
@@ -54,7 +54,7 @@ describe('Test Comment Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();
       });
