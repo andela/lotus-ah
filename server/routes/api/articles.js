@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import ArticleController from '../../controllers/ArticleController';
-// import upload from '../../helpers/imageUploader';
+import TagController from '../../controllers/TagController';
 import multerUploads from '../../config/multer/multerConfig';
 import {
   articleValidation,
-  schemas
+  schemas,
+  tagValidation
 } from '../../middlewares/inputValidator';
 import auth from '../../middlewares/TokenVerification';
 
@@ -27,4 +28,11 @@ articleRoute.delete('/articles/:id/favourite',
   auth.verifyUserToken, ArticleController.removeFavourite);
 articleRoute.get('/articles/favourite',
   auth.verifyUserToken, ArticleController.getAllFavorite);
+
+// Route for Tags
+articleRoute.post('/tags', auth.verifyUserToken, tagValidation, TagController.createTag);
+articleRoute.get('/alltags', auth.verifyUserToken, TagController.getAllTag);
+articleRoute.get('/articlebytagid/tag/:id', auth.verifyUserToken, TagController.getArticleByTagId);
+articleRoute.get('/articlebytagname/:name', auth.verifyUserToken, TagController.getArticleByTagName);
+
 export default articleRoute;

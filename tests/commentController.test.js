@@ -54,7 +54,7 @@ describe('Test Comment Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(201);
+        expect(res.statusCode).to.equal(200);
         expect(message).to.equal('Published article successfully');
         return done();
       });
