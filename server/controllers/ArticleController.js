@@ -1,8 +1,7 @@
 import slug from 'slug';
 import uuid from 'uuid';
 
-import { Article, FavoriteArticle } from '../db/models';
-
+import { Article, FavoriteArticle, Comment } from '../db/models';
 
 /**
  * @class ArticleController
@@ -187,6 +186,11 @@ class ArticleController {
       where: {
         userId,
       },
+      include: [{
+        model: Comment,
+        as: 'comments',
+        attributes: ['id', 'commentBody', 'userId', 'createdAt']
+      }],
       attributes: [
         'userId',
         'title',
@@ -236,6 +240,11 @@ class ArticleController {
         id,
         userId,
       },
+      include: [{
+        model: Comment,
+        as: 'comments',
+        attributes: ['id', 'commentBody', 'userId', 'createdAt']
+      }],
       attributes: [
         'id',
         'userId',
@@ -286,7 +295,12 @@ class ArticleController {
         'rating',
         'createdAt',
         'updatedAt'
-      ]
+      ],
+      include: [{
+        model: Comment,
+        as: 'comments',
+        attributes: ['id', 'commentBody', 'userId', 'createdAt']
+      }],
     })
       .then((articles) => {
         if (articles) {
