@@ -71,7 +71,7 @@ describe('User Controller', () => {
       .query({ token: tokenFailed })
       .end((error, result) => {
         expect(result.status).to.not.eql(200);
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
         done();
       });
@@ -82,7 +82,7 @@ describe('User Controller', () => {
       .send({ email: email.email2 })
       .end((error, result) => {
         expect(result.status).to.not.eql(201);
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
         done();
       });
@@ -116,7 +116,7 @@ describe('User Controller', () => {
       .send(email.email2)
       .end((error, result) => {
         expect(result.status).to.not.eql(201);
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
         done();
       });
@@ -127,7 +127,7 @@ describe('User Controller', () => {
       .send(email.email2)
       .end((error, result) => {
         expect(result.status).to.not.eql(201);
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
         done();
       });
@@ -173,7 +173,7 @@ describe('User Controller', () => {
       .set('x-access-token', 'bhbhbdvhfvhfvbfhbvfvbhvbfh')
       .end((error, result) => {
         expect(result.status).to.not.eql(200);
-        expect(result.status).to.eql(400);
+        expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
         done();
       });

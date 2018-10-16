@@ -1,5 +1,5 @@
 import { User } from '../db/models';
-import { generateToken } from '../helpers/helper';
+import TokenVerification from '../middlewares/TokenVerification';
 
 /**
 * @static
@@ -36,12 +36,12 @@ function createOrFindUser(request, response) {
       };
       // This checks if the user is just signing up on the platform or not
       if (created) {
-        const token = generateToken(user.id, user.email);
+        const token = TokenVerification.authenticate(user);
         returnedUser.user.token = token;
         returnedUser.message = 'User created successfully';
         response.status(201).send(returnedUser);
       } else {
-        const token = generateToken(user.id, user.email);
+        const token = TokenVerification.authenticate(user);
         returnedUser.user.token = token;
         returnedUser.message = 'User with email attached to this account already exist';
         response.status(200).send(returnedUser);

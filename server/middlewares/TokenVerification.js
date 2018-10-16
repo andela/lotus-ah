@@ -47,7 +47,7 @@ const auth = {
   verifyUserToken(request, response, next) {
     const token = request.query.token || request.body.token || request.headers['x-access-token'];
     if (!token) {
-      return response.status(400).json({
+      return response.status(401).json({
         status: 'failed',
         message: 'No token provided.'
       });
@@ -55,7 +55,7 @@ const auth = {
 
     const decoded = auth.verifyToken(token);
     if (decoded.error) {
-      return response.status(400).json({
+      return response.status(401).json({
         status: 'failed',
         message: 'Failed to authenticate token.'
       });

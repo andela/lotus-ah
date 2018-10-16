@@ -9,6 +9,7 @@ import tag from './tag';
 import createUser from '../../fixtures/user';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
+import followRoute from './follow';
 
 const router = Router();
 router.use('/', bookmark);
@@ -25,5 +26,6 @@ router.post('/create_dummy_user', createUser);
 
 router.use('/', users);
 router.use('/auth', socialAuth);
+router.use('/profiles', followRoute);
 
 export default router;

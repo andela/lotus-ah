@@ -147,7 +147,6 @@ class ArticleController {
               foundArticle.setTags(tags)
                 .then(() => foundArticle.getTags({ attributes: ['id', 'name'] })
                   .then((taglink) => {
-                    console.log(taglink);
                     res.status(200).json({
                       status: 'success',
                       message: 'Article updated successfully',
