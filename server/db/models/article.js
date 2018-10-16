@@ -1,5 +1,11 @@
 const article = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -38,6 +44,7 @@ const article = (sequelize, DataTypes) => {
   Article.associate = (models) => {
     // associations can be defined here
     Article.belongsTo(models.User, {
+      as: 'users',
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
