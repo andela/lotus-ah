@@ -1,12 +1,18 @@
 // THIRD-PARTY LIBRARY
 import { Router } from 'express';
-import ArticleController from '../../controllers/ArticleController';
-import TagController from '../../controllers/TagController';
 import multerUploads from '../../config/multer/multerConfig';
+
+// modules import
+import ArticleController from '../../controllers/ArticleController';
+import CommentController from '../../controllers/CommentController';
+
+// middelwares
+import CommentValidation from '../../middlewares/CommentValidation';
+import getUser from '../../middlewares/fetchUser';
+import getArticle from '../../middlewares/fetchArticle';
 import {
   articleValidation,
   schemas,
-  tagValidation
 } from '../../middlewares/inputValidator';
 import Auth from '../../middlewares/TokenVerification';
 
@@ -35,6 +41,16 @@ ArticleRoute.put('/user/:articleId',
     Auth.verifyUserToken,
     ArticleController.getSingleArticle);
 
+// Route for comments
+ArticleRoute.post('/:slug/comments',
+  Auth.verifyUserToken, getUser, getArticle,
+  CommentValidation.validateComment, CommentController.addCommentToArticle);
+ArticleRoute.put('/comments/:id',
+  Auth.verifyUserToken,
+  CommentValidation.validateUpdateComment,
+  CommentValidation.validateComment, CommentController.updateComment);
+
+
 // Favourite an article routes
 
 ArticleRoute.post('/:id/favourite',
@@ -61,24 +77,5 @@ ArticleRoute.get('/:articleId/like',
 ArticleRoute.get('/:articleId/dislike',
   Auth.verifyUserToken,
   ArticleController.getUserDislikedArticles);
-
-// Route for Tags
-
-ArticleRoute.post('/tags',
-  Auth.verifyUserToken,
-  tagValidation,
-  TagController.createTag);
-
-ArticleRoute.get('/alltags',
-  Auth.verifyUserToken,
-  TagController.getAllTag);
-
-ArticleRoute.get('/articlebytagid/tag/:id',
-  Auth.verifyUserToken,
-  TagController.getArticleByTagId);
-
-ArticleRoute.get('/articlebytagname/:name',
-  Auth.verifyUserToken,
-  TagController.getArticleByTagName);
 
 export default ArticleRoute;

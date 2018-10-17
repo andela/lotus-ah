@@ -50,7 +50,7 @@ describe('Test Bookmark Endpoints', () => {
         } = res.body;
         newArticle.id = res.body.createdArticle.id;
         newArticle.slug = res.body.createdArticle.slug;
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         done();
       });

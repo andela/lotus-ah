@@ -10,7 +10,7 @@ import auth from '../../middlewares/TokenVerification';
 const bookmarkRouter = Router();
 
 bookmarkRouter.post(
-  '/me/bookmarks',
+  '/me/bookmarks/',
   auth.verifyUserToken,
   BookMarkController.bookmark
 );
