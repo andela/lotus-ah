@@ -12,6 +12,7 @@ before(userSeeder.addUserToDb);
 
 let userToken;
 
+
 before((done) => {
   chai.request(app)
     .post('/api/v1/login')

@@ -57,9 +57,10 @@ describe('Testing change password route', () => {
   it('Should not change password when token on the link is not valid', (done) => {
     const token = 'e.sgvdhjcxabjsbzcjHBHJBHknjkfnjksnjfnesZFCHDBJNKSNDK';
     chai.request(app)
-      .put(`/api/v1//auth/reset_password?token=${token}`)
+      .put(`/api/v1/auth/reset_password?token=${token}`)
       .send({ password: 'test12345', confirmPassword: 'test12345' })
       .end((error, response) => {
+        console.log(token);
         expect(response.body).to.be.an('object');
         expect(response.status).to.equals(401);
         expect(response.body.message).to.equals('Failed to authenticate');

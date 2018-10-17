@@ -29,7 +29,7 @@ before((done) => {
 });
 
 describe('Test article Controller', () => {
-  it('should add favourite an article', (done) => {
+  it('should add an article', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
       .set({
