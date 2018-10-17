@@ -19,3 +19,4 @@ deploy:
     repo: andela/lotus-ah
   run:
     - sequelize db:migrate
+  
