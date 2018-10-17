@@ -1,7 +1,8 @@
-// THIRD-PARTY LIBRARY
+// Third-party libraries
 import slug from 'slug';
 import uuid from 'uuid';
 
+// modules import
 import {
   Article,
   FavoriteArticle,
@@ -9,6 +10,8 @@ import {
   Comment,
   Tag
 } from '../db/models';
+
+import timeToRead from '../helpers/timeToRead';
 
 
 /**
@@ -108,7 +111,8 @@ class ArticleController {
       } = req.body,
       id = req.params.articleId,
       userId = req.decoded.id,
-      imageUrl = null;
+      imageUrl = null,
+      readTime = timeToRead(body);
 
     if (!(Number.isInteger(id)) && !Number(id)) {
       return res.status(400)
@@ -140,7 +144,8 @@ class ArticleController {
             title: (title) || foundArticle.title,
             description: (description) || foundArticle.description,
             body: (body) || foundArticle.body,
-            imageUrl: (imageUrl) || foundArticle.imageUrl
+            imageUrl: (imageUrl) || foundArticle.imageUrl,
+            readTime,
           };
           foundArticle.update(value)
             .then((tagArticle) => {
@@ -154,6 +159,29 @@ class ArticleController {
                       tags: taglink
                     });
                   }));
+              const condition = {
+                where: {
+                  id,
+                  userId
+                },
+                returning: true
+              };
+              return Article.update(value, condition)
+                .then((article) => {
+                  res.status(200)
+                    .json({
+                      message: 'Article updated successfully',
+                      data: article[1]
+                    });
+                });
+            })
+            .catch((err) => {
+              res.status(500)
+                .json({
+                  status: 'FAILED',
+                  message: 'Error processing request, please try again',
+                  Error: err.toString()
+                });
             });
         } else {
           res.status(404).json({
@@ -170,6 +198,7 @@ class ArticleController {
           });
       });
   }
+
 
   /**
    * @description Delete an Article from the Article's list

@@ -7,6 +7,14 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    userId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
     slug: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -31,13 +39,9 @@ module.exports = {
       type: Sequelize.TEXT,
       allowNull: true
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      onDelete: 'CASCADE',
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+    readTime: {
+      type: Sequelize.JSON,
+      allowNull: true
     },
     createdAt: {
       allowNull: false,

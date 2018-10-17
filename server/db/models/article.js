@@ -1,3 +1,5 @@
+import timeToread from '../../helpers/timeToRead';
+
 const article = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
     id: {
@@ -24,6 +26,10 @@ const article = (sequelize, DataTypes) => {
     },
     rating: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    readTime: {
+      type: DataTypes.JSON,
       allowNull: true
     },
     imageUrl: {
@@ -66,6 +72,9 @@ const article = (sequelize, DataTypes) => {
       as: 'favourite'
     });
   };
+  Article.beforeCreate((newArticle) => {
+    newArticle.readTime = timeToread(newArticle.body);
+  });
   return Article;
 };
 export default article;
