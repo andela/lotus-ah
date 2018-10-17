@@ -146,7 +146,7 @@ describe('Test Comment Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(400);
+        expect(res.statusCode).to.equal(401);
         expect(message).to.equal('Failed to authenticate token.');
         return done();
       });
@@ -203,7 +203,7 @@ describe('Test Comment Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(400);
+        expect(res.statusCode).to.equal(401);
         expect(message).to.equal('Failed to authenticate token.');
         return done();
       });
@@ -221,7 +221,7 @@ describe('Test Comment Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(400);
+        expect(res.statusCode).to.equal(401);
         expect(message).to.equal('No token provided.');
         return done();
       });

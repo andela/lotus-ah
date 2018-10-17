@@ -39,7 +39,22 @@ const seeder = {
           .catch(err => done(err));
       })
       .catch(err => err);
-  }
+  },
+  addSecondUserToDb(done) {
+    const password = 'tiatiatia40';
+    bcrypt.hash(password, 10)
+      .then((userHash) => {
+        User.create({
+          firstName: 'Kunle',
+          lastName: 'Adekunle',
+          username: 'Backend',
+          email: 'kunleadekunle@gmail.com',
+          password: userHash
+        }).then(() => done())
+          .catch(err => done(err));
+      })
+      .catch(err => err);
+  },
 };
 
 export default seeder;
