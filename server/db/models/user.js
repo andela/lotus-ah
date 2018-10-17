@@ -82,6 +82,10 @@ const user = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'reaction'
     });
+    User.hasMany(models.Highlight, {
+      foreignKey: 'userId',
+      as: 'highlights'
+    });
     User.hasOne(models.Role, {
       foreignKey: 'roleId',
       as: 'roles'
