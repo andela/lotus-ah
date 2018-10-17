@@ -1,0 +1,30 @@
+{
+  "name": "lotus-ah",
+  "scripts": {
+  },
+  "env": {
+    "DATABASE": {
+      "required": true
+    },
+    "DIALECT": {
+      "required": true
+    },
+    "HOST": {
+      "required": true
+    },
+    "PASSWORD": {
+      "required": true
+    },
+    "USER": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+
+  ]
+}
