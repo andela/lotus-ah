@@ -75,6 +75,33 @@ class CommentValidation {
           });
       });
   }
+
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @param {function} next
+  * @returns {object} object
+  * @memberof CommentValidation
+  */
+  static validateBody(request, response, next) {
+    const { commentBody, highlightedText } = request.body;
+    const commentError = [];
+    if (commentBody === undefined || commentBody.trim() === '') {
+      commentError.push('Invalid comment body');
+    }
+    if (highlightedText === undefined || highlightedText.trim() === '') {
+      commentError.push('Invalid text input');
+    }
+    if (commentError.length >= 1) {
+      return response.status(403)
+        .json({
+          success: false,
+          message: commentError
+        });
+    }
+    return next();
+  }
 }
 
 export default CommentValidation;

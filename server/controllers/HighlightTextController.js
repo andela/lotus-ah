@@ -42,7 +42,7 @@ class HighlightTextController {
           });
         }
         return response.status(201).json({
-          message: 'Highlighted text has been commented on successfully ',
+          message: 'Highlighted text has been commented on successfully',
           highlight,
         });
       });
