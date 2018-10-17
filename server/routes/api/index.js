@@ -3,7 +3,11 @@ import users from './users';
 import auth from './auth';
 import bookmark from './bookmark';
 import tag from './tag';
+<<<<<<< HEAD
 import articleRating from './articleRatings';
+=======
+import search from './search';
+>>>>>>> feat(search): implement search functionality
 
 
 // Import fixtures
@@ -19,6 +23,7 @@ router.use('/users', users);
 router.use('/', auth);
 router.use('/articles', articles);
 router.use('/', tag);
+router.use('/', search);
 
 /*       ******** Fixture routes ****************
 */

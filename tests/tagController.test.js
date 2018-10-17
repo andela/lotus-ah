@@ -3,7 +3,6 @@ import chaiHttp from 'chai-http';
 import app from '../index';
 
 import userSeeder from '../server/db/seeders/userSeeder';
-// import articleSeeder from '../server/db/seeder/articleSeeder';
 
 chai.use(chaiHttp);
 const { expect } = chai;
