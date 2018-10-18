@@ -5,6 +5,7 @@ import multerUploads from '../../config/multer/multerConfig';
 // modules import
 import ArticleController from '../../controllers/ArticleController';
 import CommentController from '../../controllers/CommentController';
+import HighlightTextController from '../../controllers/HighlightTextController';
 
 // middelwares
 import CommentValidation from '../../middlewares/CommentValidation';
@@ -40,6 +41,10 @@ ArticleRoute.put('/user/:articleId',
   .get('/user/:articleId',
     Auth.verifyUserToken,
     ArticleController.getSingleArticle);
+
+// Route for highlights
+ArticleRoute.post('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, CommentValidation.validateBody, HighlightTextController.highlightArticleText);
+ArticleRoute.get('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, HighlightTextController.getHighlightTedText);
 
 // Route for comments
 ArticleRoute.post('/:slug/comments',

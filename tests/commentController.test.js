@@ -36,7 +36,7 @@ before((done) => {
 
 // Comment controller test
 describe('Test Comment Controller', () => {
-  it('should add a new comment', (done) => {
+  it('should create a new article', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
       .set({
@@ -51,6 +51,7 @@ describe('Test Comment Controller', () => {
       ))
       .end((err, res) => {
         articleSlug = res.body.createdArticle.slug;
+        console.log('================>', articleSlug)
         const {
           message,
         } = res.body;
@@ -69,6 +70,7 @@ describe('Test Comment Controller', () => {
         'My first comment',
       ))
       .end((err, res) => {
+        console.log('================>', res.body)
         commentId = res.body.data.comment.id;
         const {
           message,

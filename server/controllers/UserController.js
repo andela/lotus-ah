@@ -116,7 +116,7 @@ class UserController {
           token: userToken,
         });
       })
-      .catch((err) => { console.log(err.message); });
+      .catch(err => (err.message));
   }
 
   /**
@@ -153,7 +153,7 @@ class UserController {
             message: 'Incorrect Email or Password'
           });
         }
-      }).catch(err => console.log(err));
+      }).catch(err => err.message);
   }
 
   /**
@@ -185,7 +185,7 @@ class UserController {
             message: 'User does not exist'
           });
         }
-      }).catch((err) => { console.log(err.message); });
+      }).catch(err => err.message);
   }
 
   /**
@@ -223,7 +223,7 @@ class UserController {
         message: 'User Update was Successfull',
         user
       }))
-      .catch((err) => { console.log(err.message); });
+      .catch(err => err.message);
   }
 }
 export default UserController;
