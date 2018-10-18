@@ -50,7 +50,7 @@ const validator = {
     if (pass === '' || pass.length < 6) {
       return response.status(422).json({
         status: 'Failed',
-        message: 'should be a minimum of 6 characters',
+        message: 'Password should be a minimum of 6 characters',
       });
     }
     if (pass !== confirmPassword) {
@@ -61,7 +61,8 @@ const validator = {
     }
     request.body.newPassword = pass;
     next();
-  }
+  },
+
 };
 
 export default validator;

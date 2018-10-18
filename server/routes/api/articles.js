@@ -27,6 +27,7 @@ const ArticleRoute = Router();
 
 ArticleRoute.post('/',
   Auth.verifyUserToken,
+  getUser,
   multerUploads,
   articleValidation(schemas.articleSchema),
   ArticleController.createArticle)
@@ -110,6 +111,7 @@ ArticleRoute.get('/:slug',
 
 ArticleRoute.post('/comments/:commentId/:likeType',
   Auth.verifyUserToken,
+  getUser,
   getComment,
   LikesController.likeComment);
 
@@ -134,6 +136,7 @@ ArticleRoute.post('/:id/favourite',
 
 ArticleRoute.post('/:articleId/:likeType',
   Auth.verifyUserToken,
+  getUser,
   LikesController.likeArticle);
 
 ArticleRoute.get('/:articleId/like',

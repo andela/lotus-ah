@@ -1,13 +1,24 @@
-import { Comment } from '../db/models';
+import { Comment, User } from '../db/models';
+
 
 // Method to fetch a comment with the user
 const getComment = (request, response, next) => {
-  const userId = request.decoded.id;
   Comment.findOne({
-    attributes: ['id', 'commentBody', 'updatedAt'],
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: [
+          'id',
+          'email',
+          'firstname',
+          'username'
+        ]
+      }
+    ],
+    attributes: ['id', 'userId', 'commentBody', 'updatedAt'],
     where: {
       id: request.params.commentId,
-      userId
     }
   })
     .then((comment) => {

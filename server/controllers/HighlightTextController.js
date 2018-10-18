@@ -1,4 +1,5 @@
 import models from '../db/models';
+import NotificationController from './NotificationController';
 
 const { Highlight } = models;
 
@@ -14,11 +15,12 @@ class HighlightTextController {
    * @memberof HighlightTextController
    */
   static highlightArticleText(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     const userId = user.id;
     const articleId = article.id;
     const { commentBody, highlightedText } = request.body;
+    const author = request.articleObject.dataValues.users.dataValues;
 
     Highlight.findOrCreate({
       where: {
@@ -41,6 +43,20 @@ class HighlightTextController {
             message: 'This text has already been commented on'
           });
         }
+        const notify = {
+          type: 'comment',
+          article: article.title,
+          author,
+          authenticatedUser: user,
+          articleUrl: `${process.env.BASE_URL}/api/v1/articles/${article.slug}`,
+          message: `${user.firstname} commented on your article`
+        };
+        NotificationController.notifyFollowers(
+          {
+            followerType: 'article',
+            notify,
+          }
+        );
         return response.status(201).json({
           message: 'Highlighted text has been commented on successfully',
           highlight,
@@ -56,7 +72,7 @@ class HighlightTextController {
    * @memberof HighlightTextController
    */
   static getHighlightTedText(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     const userId = user.id;
     const articleId = article.id;

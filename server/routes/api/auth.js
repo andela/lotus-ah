@@ -17,5 +17,11 @@ authRouter.put(
   AuthController.resetPassword
 );
 
+authRouter.get(
+  '/auth/forgot_password',
+  validator.verifyRestPasswordToken,
+  AuthController.verifyUserEmail
+);
+
 
 export default authRouter;

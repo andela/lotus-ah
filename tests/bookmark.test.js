@@ -7,7 +7,6 @@ import userSeeder from '../server/db/seeders/userSeeder';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-before(userSeeder.addUserToDb);
 
 let userToken = null;
 const newArticle = {};

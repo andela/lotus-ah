@@ -11,8 +11,7 @@ import {
   Reaction
 } from '../db/models';
 import timeToRead from '../helpers/timeToRead';
-
-
+import NotificationController from './NotificationController';
 /**
  * @class ArticleController
  * @desc This is a class controller
@@ -49,9 +48,10 @@ class ArticleController {
       imageUrl = req.file.path;
     }
     const articleSlug = ArticleController.makeSlug(title);
+    const authenticatedUser = req.authUser;
     let tags = req.body.tags || [];
     if (tags.length > 5) {
-      res.status(400).json({
+      return res.status(400).json({
         status: 'failed',
         message: 'Tags should not exceed 5',
       });
@@ -81,7 +81,21 @@ class ArticleController {
           }]
         })
           .then((createdArticle) => {
-            res.status(201).json({
+            const notify = {
+              type: 'publish',
+              article: createdArticle.title,
+              author: authenticatedUser,
+              authenticatedUser,
+              articleUrl: `${process.env.BASE_URL}/api/v1/articles/${createdArticle.slug}`,
+              message: `${authenticatedUser.firstname} published new artilce`
+            };
+            NotificationController.notifyFollowers(
+              {
+                followerType: 'authorFollowers',
+                notify,
+              }
+            );
+            return res.status(201).json({
               status: 'SUCCESS',
               message: 'Published article successfully',
               createdArticle

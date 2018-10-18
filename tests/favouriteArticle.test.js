@@ -8,7 +8,6 @@ import articleSeeder from '../server/db/seeders/articleSeeder';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-before(userSeeder.addUserToDb);
 
 let userToken;
 

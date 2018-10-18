@@ -1,17 +1,16 @@
 // modules import
 import model from '../db/models';
 
-const { User } = model;
+const { User, } = model;
 
 // Method to fetch the authenticated user
 const getUser = (request, response, next) => {
   const { id } = request.decoded;
-
   User.find({
     where: {
       id
     },
-    attributes: ['id', 'roleId', 'username', 'bio', 'imageUrl']
+    attributes: ['id', 'email', 'username', 'bio', 'imageUrl', 'firstname']
   })
     .then((user) => {
       if (!user) {
@@ -21,7 +20,7 @@ const getUser = (request, response, next) => {
             message: 'User does not exist'
           });
       }
-      request.userObject = user;
+      request.authUser = user.dataValues;
       next();
     })
     .catch(next);

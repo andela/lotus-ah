@@ -68,28 +68,15 @@ class BookMarkController {
     Bookmark.destroy({
       where: { userId, id }
     })
-      .then((result) => {
+      .then(() => {
         const message = 'Article removed from bookmark';
-        if (result === 0) {
-          const bookmarkNotFound = new Error();
-          bookmarkNotFound.message = 'Bookmark does not exist';
-          bookmarkNotFound.number = 404;
-          throw bookmarkNotFound;
-        }
         res.status(200)
           .json({
             status: 'Success',
             message,
           });
       })
-      .catch((error) => {
-        if (error.number === 404) {
-          return res.status(404)
-            .json({
-              status: 'Failed',
-              message: error.message,
-            });
-        }
+      .catch(() => {
         res.status(500)
           .json({
             status: 'Failed',

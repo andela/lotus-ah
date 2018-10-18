@@ -2,11 +2,6 @@ import bcrypt from 'bcrypt';
 import { User } from '../models';
 
 const seeder = {
-  emptyUserTable(done) {
-    User.destroy({ truncate: true, cascade: true, restartIdentity: true })
-      .then(() => done())
-      .catch(err => done(err));
-  },
   setSignUpData(
     firstName, username, lastName, email, password, bio
   ) {
@@ -56,6 +51,11 @@ const seeder = {
           .catch(err => done(err));
       })
       .catch(err => err);
+  },
+  emptyUserTable(done) {
+    User.destroy({ truncate: true, cascade: true, restartIdentity: true })
+      .then(() => done())
+      .catch(err => done(err));
   },
 };
 

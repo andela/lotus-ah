@@ -16,6 +16,7 @@ const favoriteArticles = (sequelize, DataTypes) => {
     });
     FavoriteArticle.belongsTo(models.User, {
       foreignKey: 'userId',
+      as: 'users',
       onDelete: 'CASCADE'
     });
   };

@@ -13,8 +13,6 @@ import app from '../index';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-before(userSeeder.emptyUserTable);
-before(userSeeder.addUserToDb);
 
 let userToken;
 let articleSlug;

@@ -6,6 +6,8 @@ import tag from './tag';
 import articleRating from './articleRatings';
 import search from './search';
 import admin from './admin';
+import notification from './notification';
+
 
 // Import fixtures
 import createUser from '../../fixtures/user';
@@ -22,6 +24,7 @@ router.use('/', auth);
 router.use('/articles', articles);
 router.use('/', tag);
 router.use('/', search);
+router.use('/', notification);
 
 /*       ******** Fixture routes ****************
 */

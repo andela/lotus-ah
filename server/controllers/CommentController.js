@@ -1,6 +1,6 @@
 // module import
 import model from '../db/models';
-
+import NotificationController from './NotificationController';
 
 const { Comment } = model;
 /**
@@ -16,9 +16,10 @@ class CommentController {
    * @memberof CommentController
    */
   static addCommentToArticle(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     const userId = user.id;
+    const author = request.articleObject.dataValues.users.dataValues;
     const articleId = article.id;
     const { commentBody } = request.body;
 
@@ -27,7 +28,6 @@ class CommentController {
       articleId,
       commentBody
     };
-
     Comment.create(commentObject)
       .then((comment) => {
         if (!comment) {
@@ -36,6 +36,20 @@ class CommentController {
               message: 'Internal Server Error',
             });
         }
+        const notify = {
+          type: 'comment',
+          article: article.title,
+          author,
+          authenticatedUser: user,
+          articleUrl: `${process.env.BASE_URL}/api/v1/articles/${article.slug}`,
+          message: `${user.firstname} commented on your article`
+        };
+        NotificationController.notifyFollowers(
+          {
+            followerType: 'article',
+            notify,
+          }
+        );
         return response.status(201)
           .json({
             message: 'Comment Added Successfully',

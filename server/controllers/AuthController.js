@@ -39,21 +39,27 @@ class AuthController {
         const token = jwt.sign({ userId: result.id }, process.env.SECRET, {
           expiresIn: '1hr',
         });
-        const link = `/api/v1/auth/reset_password?token=${token}`;
+        const path = `/api/v1/auth/reset_password?token=${token}`;
         // Send mail
-        EmailController.validationEmail(result);
+        const resetPasswordLink = `${process.env.BASE_URL}${path}`;
+        const emailObject = {
+          to: result.email,
+          from: process.env.EMAIL_HOST,
+          templateId: 'd-2ecbb1b8b5b64df280ab596df9d0931c',
+          message: `Hi ${result.firstname}`,
+          dynamic_template_data: {
+            resetPasswordLink,
+          }
+        };
+        EmailController.sendMail(emailObject);
         return response.status(200)
           .json({
             status: 'success',
             message: 'Password reset details has been sent to your mail',
-            link,
+            token,
+            link: path,
           });
-      })
-      .catch(err => response.status(500).json({
-        status: 'FAILED',
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      }).catch(error => error);
   }
 
 
@@ -79,6 +85,25 @@ class AuthController {
           status: 'Failed',
           message: 'Problem changing password',
         }));
+  }
+
+  /**
+   * @static
+   * @param {object} request
+   * @param {object} response
+   * @description verifies token from email
+   * @returns {object} body
+   * @memberof AuthController
+   */
+  static verifyUserEmail(request, response) {
+    const token = jwt.sign({ userId: request.body.userId }, process.env.SECRET, {
+      expiresIn: '1hr',
+    });
+    response.status(200)
+      .json({
+        message: 'Account verified successfully',
+        token,
+      });
   }
 }
 export default AuthController;

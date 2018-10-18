@@ -1,5 +1,6 @@
 // follow model
 import { Follow, User } from '../db/models';
+import NotificationController from './NotificationController';
 
 /**
  * @class FollowController
@@ -17,6 +18,7 @@ class FollowController {
   static followUser(request, response) {
     const followerId = request.decoded.id;
     const followingId = request.params.userId;
+    const authenticatedUser = request.authUser;
     const fllId = parseInt(followerId, 0);
     const fId = parseInt(followingId, 0);
     if (fllId === fId) {
@@ -33,7 +35,20 @@ class FollowController {
             id: follow.followinId
           }
         }).then((user) => {
+          const baseImgae = 'https://blogcdn1.secureserver.net/wp-content/uploads';
           if (user) {
+            const data = {
+              type: 'follow',
+              follower: authenticatedUser,
+              user,
+              following: user,
+              followerImage: `${baseImgae}/2014/06/create-a-gravatar-beard-768x795.png`,
+              templateId: 'd-b0be4323d9fa4fd9a3bd2d88fb671755',
+              message: `Hey ${user.firstname}, ${authenticatedUser.firstname}
+              started following you,
+              `
+            };
+            NotificationController.notifyUser(data, user.id);
             response.status(201).json({
               profile: {
                 username: user.username,
@@ -132,6 +147,9 @@ class FollowController {
    */
   static listFollowing(request, response) {
     Follow.findAndCountAll({
+      include: {
+        model: User,
+      },
       where: {
         followerId: request.decoded.id
       }
