@@ -105,6 +105,10 @@ const user = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'favorites'
     });
+    User.hasMany(models.Rating, {
+      foreignKey: 'userId',
+      as: 'ratings'
+    });
   };
   return User;
 };

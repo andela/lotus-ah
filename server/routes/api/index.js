@@ -3,6 +3,7 @@ import users from './users';
 import auth from './auth';
 import bookmark from './bookmark';
 import tag from './tag';
+import articleRating from './articleRatings';
 
 
 // Import fixtures
@@ -13,6 +14,7 @@ import followRoute from './follow';
 
 const router = Router();
 router.use('/', bookmark);
+router.use('/', articleRating);
 router.use('/users', users);
 router.use('/', auth);
 router.use('/articles', articles);

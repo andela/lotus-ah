@@ -356,6 +356,7 @@ class ArticleController {
         'userId',
         'title',
         'body',
+        'slug',
         'description',
         'rating',
         'createdAt',
