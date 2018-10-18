@@ -47,5 +47,37 @@ class HighlightTextController {
         });
       });
   }
+
+  /**
+   * @static
+   * @param {object} request
+   * @param {object} response
+   * @return {object} highlightedObject
+   * @memberof HighlightTextController
+   */
+  static getHighlightTedText(request, response) {
+    const user = request.userObject.dataValues;
+    const article = request.articleObject.dataValues;
+    const userId = user.id;
+    const articleId = article.id;
+    Highlight.findAll({
+      where: {
+        userId,
+        articleId
+      }
+    })
+      .then((fetchComment) => {
+        if (!fetchComment) {
+          return response.status(500)
+            .json({
+              message: 'Internal Server Error'
+            });
+        }
+        return response.status(200).json({
+          message: 'Comment fetched Succesfully',
+          fetchComment,
+        });
+      });
+  }
 }
 export default HighlightTextController;

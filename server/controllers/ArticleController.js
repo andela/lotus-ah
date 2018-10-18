@@ -8,7 +8,7 @@ import {
   FavoriteArticle,
   Reaction,
   Comment,
-  Tag
+  Tag,
 } from '../db/models';
 import timeToRead from '../helpers/timeToRead';
 
@@ -350,7 +350,8 @@ class ArticleController {
         through: {
           attributes: [],
         }
-      }],
+      },
+      ],
       attributes: [
         'id',
         'userId',

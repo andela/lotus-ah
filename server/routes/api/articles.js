@@ -53,6 +53,8 @@ ArticleRoute.put('/comments/:id',
 
 // Route for highlights
 ArticleRoute.post('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, CommentValidation.validateBody, HighlightTextController.highlightArticleText);
+ArticleRoute.get('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, HighlightTextController.getHighlightTedText);
+
 
 // Favourite an article routes
 

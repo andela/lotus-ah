@@ -195,4 +195,19 @@ describe('Test Highlight Controller', () => {
         return done();
       });
   });
+  it('should not get all highlighted comment', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${articleSlug}/highlights`)
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('Comment fetched Succesfully');
+        return done();
+      });
+  });
 });
