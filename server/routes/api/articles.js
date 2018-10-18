@@ -42,6 +42,10 @@ ArticleRoute.put('/user/:articleId',
     Auth.verifyUserToken,
     ArticleController.getSingleArticle);
 
+// Route for highlights
+ArticleRoute.post('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, CommentValidation.validateBody, HighlightTextController.highlightArticleText);
+ArticleRoute.get('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, HighlightTextController.getHighlightTedText);
+
 // Route for comments
 ArticleRoute.post('/:slug/comments',
   Auth.verifyUserToken, getUser, getArticle,
@@ -50,10 +54,6 @@ ArticleRoute.put('/comments/:id',
   Auth.verifyUserToken,
   CommentValidation.validateUpdateComment,
   CommentValidation.validateComment, CommentController.updateComment);
-
-// Route for highlights
-ArticleRoute.post('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, CommentValidation.validateBody, HighlightTextController.highlightArticleText);
-ArticleRoute.get('/:slug/highlights', Auth.verifyUserToken, getUser, getArticle, HighlightTextController.getHighlightTedText);
 
 
 // Favourite an article routes

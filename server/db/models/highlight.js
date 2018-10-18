@@ -7,7 +7,7 @@ const highlight = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Users',
+        model: 'User',
         key: 'id',
         as: 'userId'
       }
@@ -16,7 +16,7 @@ const highlight = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Articles',
+        model: 'Article',
         key: 'id',
         as: 'articleId'
       }
@@ -25,7 +25,7 @@ const highlight = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
 
-  }, { tablename: 'highlights' });
+  }, { tableName: 'highlights' });
   Highlight.associate = (models) => {
     // associations can be defined here
     Highlight.belongsTo(models.User, {
