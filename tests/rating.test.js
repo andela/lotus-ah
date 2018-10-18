@@ -40,7 +40,7 @@ describe('Testing Rating Article Routes', () => {
         } = res.body;
         articleSlug = res.body.Articles.slug;
         expect(res.statusCode).to.equal(200);
-        expect(message).to.equal('Single article displayed');
+        expect(message).to.equal('Fetched a single user article');
         return done();
       });
   });
