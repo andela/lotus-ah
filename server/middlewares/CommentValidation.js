@@ -85,6 +85,7 @@ class CommentValidation {
   * @memberof CommentValidation
   */
   static validateBody(request, response, next) {
+    const article = request.articleObject.dataValues;
     const { commentBody, highlightedText } = request.body;
     const commentError = [];
     if (commentBody === undefined || commentBody.trim() === '') {
@@ -92,6 +93,9 @@ class CommentValidation {
     }
     if (highlightedText === undefined || highlightedText.trim() === '') {
       commentError.push('Invalid text input');
+    }
+    if (!article.body.includes(highlightedText)) {
+      commentError.push('Highlighted text not found');
     }
     if (commentError.length >= 1) {
       return response.status(403)
