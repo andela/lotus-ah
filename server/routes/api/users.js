@@ -18,7 +18,7 @@ userRoute.put('/', AuthController.verifyUserToken, upload, UserValidation.checkR
 
 // User profile route
 userRoute.get('/profile/:id', UserValidation.checkProfileId, UserController.getUserProfile);
-userRoute.put('/profile/:id', AuthController.verifyUserToken, UserValidation.checkProfileId, UserValidation.compareId, upload, UserValidation.checkUserDetails, UserController.updateUser);
+userRoute.put('/profile/:id', AuthController.verifyUserToken, UserValidation.checkProfileId, UserValidation.compareId, upload, UserValidation.checkUserDetails, UserController.editUserProfile);
 
 
 export default userRoute;

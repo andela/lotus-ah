@@ -7,7 +7,6 @@ import articleRating from './articleRatings';
 import search from './search';
 import admin from './admin';
 
-
 // Import fixtures
 import createUser from '../../fixtures/user';
 import articles from './articles';
