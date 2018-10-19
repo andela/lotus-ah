@@ -34,8 +34,21 @@ before((done) => {
       done();
     });
 });
-
 describe('Testing Tag Controller', () => {
+  it('should get no tags', (done) => {
+    chai.request(app)
+      .get('/api/v1/alltags')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        console.log('res', res.body);
+        expect(res.statusCode).to.equal(404);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.equals('No tag available');
+        done();
+      });
+  });
   it('should create tags', (done) => {
     chai.request(app)
       .post('/api/v1/tags')

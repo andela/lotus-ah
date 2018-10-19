@@ -79,6 +79,10 @@ const article = (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'favourite'
     });
+    Article.hasMany(models.ReadingStat, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
+    });
   };
   Article.beforeCreate((newArticle) => {
     newArticle.readTime = timeToread(newArticle.body);
