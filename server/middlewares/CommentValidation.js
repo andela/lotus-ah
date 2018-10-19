@@ -40,7 +40,7 @@ class CommentValidation {
   * @memberof CommentValidation
   */
   static validateUpdateComment(request, response, next) {
-    const commentId = request.params.id;
+    const { commentId } = request.params;
     const userId = request.decoded.id;
     Comment.findOne({
       where: {

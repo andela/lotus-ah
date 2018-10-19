@@ -1,14 +1,14 @@
 
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('commentHistories', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    commentBody: {
+    initialComment: {
       type: Sequelize.STRING
     },
     userId: {
@@ -20,22 +20,17 @@ module.exports = {
         as: 'userId'
       }
     },
-    articleId: {
+    commentId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'articles',
+        model: 'comments',
         key: 'id',
-        as: 'articleId'
+        as: 'commentId'
       }
     },
-    lien: {
-      type: Sequelize.INTEGER,
-      defaultValue: 3
-    },
-    commentEditCount: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
+    commentCreatedDate: {
+      type: Sequelize.DATE
     },
     createdAt: {
       allowNull: false,
@@ -46,5 +41,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('comments')
+  down: queryInterface => queryInterface.dropTable('commentHistories')
 };

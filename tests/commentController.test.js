@@ -152,7 +152,7 @@ describe('Test Comment Controller', () => {
 
   it('should update comment', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/comments/${commentId}`)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
       .set({
         'x-access-token': userToken,
       })
@@ -171,7 +171,7 @@ describe('Test Comment Controller', () => {
 
   it('should not update comment if id is not valid', (done) => {
     chai.request(app)
-      .put('/api/v1/articles/comments/7')
+      .put(`/api/v1/articles/${articleSlug}/comments/7/edit`)
       .set({
         'x-access-token': userToken,
       })
@@ -190,7 +190,7 @@ describe('Test Comment Controller', () => {
 
   it('should not update comment if token is not valid', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/comments/${commentId}`)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
       .set({
         'x-access-token': '465u789oiujyhgfhj',
       })
@@ -206,9 +206,10 @@ describe('Test Comment Controller', () => {
         return done();
       });
   });
+
   it('should not update comment if token is not provided', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/comments/${commentId}`)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
       .set({
 
       })
@@ -318,6 +319,56 @@ describe('Test Comment Controller', () => {
         expect(res.statusCode).to.equal(201);
         expect(message).to.equal('you unliked the comment');
         return done();
+      });
+  });
+  it('should fetch comment history', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
+      .set({
+        'x-access-token': userToken,
+      })
+      .send(commentSeeder.setCommentData(
+        'pholayemi is a boy'
+      ))
+      .end(() => {
+        chai.request(app)
+          .get(`/api/v1/articles/${articleSlug}/comments/${commentId}/`)
+          .set({
+            'x-access-token': userToken,
+          })
+          .end((err, res) => {
+            const {
+              message,
+            } = res.body;
+            expect(res.statusCode).to.equal(200);
+            expect(message).to.equal('Fetch comment history successfully');
+            return done();
+          });
+      });
+  });
+  it('should not fetch comment history if comment id is invalid', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
+      .set({
+        'x-access-token': userToken,
+      })
+      .send(commentSeeder.setCommentData(
+        'pholayemi is a boy'
+      ))
+      .end(() => {
+        chai.request(app)
+          .get(`/api/v1/articles/${articleSlug}/comments/7/`)
+          .set({
+            'x-access-token': userToken,
+          })
+          .end((err, res) => {
+            const {
+              message,
+            } = res.body;
+            expect(res.statusCode).to.equal(404);
+            expect(message).to.equal('comment not found');
+            return done();
+          });
       });
   });
 });
