@@ -57,6 +57,22 @@ const seeder = {
       .then(() => done())
       .catch(err => done(err));
   },
+  addAdminToDb(done) {
+    const password = 'tiatiatia40';
+    bcrypt.hash(password, 10)
+      .then((userHash) => {
+        User.create({
+          firstName: 'Femi',
+          lastName: 'AdeFemi',
+          username: 'Backend',
+          email: 'femiadefemi@gmail.com',
+          roleType: 'admin',
+          password: userHash
+        }).then(() => done())
+          .catch(err => done(err));
+      })
+      .catch(err => err);
+  },
 };
 
 export default seeder;

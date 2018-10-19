@@ -24,6 +24,10 @@ const user = (sequelize, DataTypes) => {
       unique: true,
       allowNull: true
     },
+    roleType: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     email: {
       type: DataTypes.STRING,
       unique: true,

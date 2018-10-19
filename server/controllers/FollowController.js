@@ -126,10 +126,21 @@ class FollowController {
    */
   static listFollowers(request, response) {
     Follow.findAndCountAll({
+      include: [{
+        model: User,
+        attributes: [
+          'id',
+          'username',
+          'imageUrl'
+        ],
+        required: true
+      }],
       where: {
         followinId: request.decoded.id
       }
     }).then((followers) => {
+      console.log(followers);
+      console.log(followers.rows);
       response.status(201).json({
         followers: followers.rows,
         followersCount: followers.count

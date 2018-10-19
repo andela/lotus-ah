@@ -7,6 +7,11 @@ import articleRating from './articleRatings';
 import search from './search';
 import admin from './admin';
 import notification from './notification';
+import profiles from './profiles';
+
+
+// Import fixtures
+import createUser from '../../fixtures/user';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
 import followRoute from './follow';
@@ -25,6 +30,7 @@ router.use('/', notification);
 
 router.use('/', users);
 router.use('/auth', socialAuth);
-router.use('/profiles', followRoute);
+router.use('/profile', followRoute);
+router.use('/profiles', profiles);
 
 export default router;

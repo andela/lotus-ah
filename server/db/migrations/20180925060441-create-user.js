@@ -16,6 +16,10 @@ module.exports = {
         as: 'roleId'
       }
     },
+    roleType: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
     username: {
       type: Sequelize.STRING,
       allowNull: true
