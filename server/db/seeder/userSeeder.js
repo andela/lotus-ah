@@ -18,9 +18,6 @@ const seeder = {
   setLoginData(email, password) {
     return { email, password };
   },
-  setInitData(email) {
-    return { email };
-  },
   addUserToDb(done) {
     const password = 'chigodwin1';
     bcrypt.hash(password, 10)
@@ -34,8 +31,7 @@ const seeder = {
           roleId: 1,
         }).then(() => done())
           .catch(err => done(err));
-      })
-      .catch(err => err);
+      });
   },
   addSecondUserToDb(done) {
     const password = 'tiatiatia40';
@@ -47,10 +43,8 @@ const seeder = {
           username: 'Backend',
           email: 'kunleadekunle@gmail.com',
           password: userHash
-        }).then(() => done())
-          .catch(err => done(err));
-      })
-      .catch(err => err);
+        }).then(() => done());
+      });
   },
   emptyUserTable(done) {
     User.destroy({ truncate: true, cascade: true, restartIdentity: true })
@@ -66,12 +60,10 @@ const seeder = {
           lastName: 'AdeFemi',
           username: 'Backend',
           email: 'femiadefemi@gmail.com',
-          roleType: 'admin',
+          roleId: 1,
           password: userHash
-        }).then(() => done())
-          .catch(err => done(err));
-      })
-      .catch(err => err);
+        }).then(() => done());
+      });
   },
 };
 

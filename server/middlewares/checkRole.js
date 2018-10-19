@@ -10,7 +10,7 @@ const getRole = (request, response, next) => {
   User.findOne({
     where: {
       id,
-      roleType: 'admin'
+      roleId: 1
     }
   })
     .then((user) => {

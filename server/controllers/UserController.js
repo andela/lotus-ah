@@ -264,7 +264,7 @@ class UserController {
             message: 'User does not exist'
           });
         }
-      }).catch((err) => { console.log(err.message); });
+      }).catch(err => err.message);
   }
 }
 export default UserController;

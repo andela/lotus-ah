@@ -96,6 +96,7 @@ describe('Test Highlight Controller', () => {
         'Policemen'
       ))
       .end((err, res) => {
+        console.log('=========>', res.body);
         const {
           message,
         } = res.body;

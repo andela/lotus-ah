@@ -139,8 +139,6 @@ class FollowController {
         followinId: request.decoded.id
       }
     }).then((followers) => {
-      console.log(followers);
-      console.log(followers.rows);
       response.status(201).json({
         followers: followers.rows,
         followersCount: followers.count

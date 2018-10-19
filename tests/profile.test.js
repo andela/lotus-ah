@@ -9,10 +9,6 @@ import userSeeder from '../server/db/seeders/userSeeder';
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const followDetails = {
-  followinId: 2,
-  followerId: 1
-};
 let profileToken;
 let adminToken;
 
@@ -25,8 +21,8 @@ before((done) => {
   chai.request(server)
     .post('/api/v1/login')
     .send(userSeeder.setLoginData(
-      'nondefyde@gmail.com',
-      'chigodwin1',
+      'kunleadekunle@gmail.com',
+      'tiatiatia40',
     )).end((err, res) => {
       expect(res.statusCode).to.equal(200);
       if (err) return done(err);
@@ -95,7 +91,6 @@ describe('GET /api/v1/profiles', () => {
     chai
       .request(server)
       .get('/api/v1/profiles')
-      .send(followDetails)
       .set({
         'x-access-token': adminToken,
       })
