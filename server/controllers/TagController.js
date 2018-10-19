@@ -9,8 +9,8 @@ import { Tag, Article } from '../db/models';
 class TagController {
   /**
      * @static
-     * @param {*} request
-     * @param {*} response
+     * @param {object} request
+     * @param {object} response
      * @memberof TagController
      * @returns {object} json
      */
@@ -28,19 +28,28 @@ class TagController {
 
   /**
    * @static
-   * @param {*} request
-   * @param {*} response
+   * @param {object} request
+   * @param {object} response
    * @memberof TagController
    * @returns {object} json
    */
   static getAllTag(request, response) {
     Tag.findAll()
-      .then(tag => response.status(200)
-        .json({
-          status: 'success',
-          message: 'All tags available',
-          tag
-        }))
+      .then((tag) => {
+        if (!tag || tag.length === 0) {
+          return response.status(404)
+            .json({
+              status: 'failed',
+              message: 'Tag name provided does not exist'
+            });
+        }
+        response.status(200)
+          .json({
+            status: 'success',
+            message: 'All tags available',
+            tag
+          });
+      })
       .catch(error => error.message);
   }
 

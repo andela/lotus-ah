@@ -4,6 +4,7 @@ import auth from './auth';
 import bookmark from './bookmark';
 import tag from './tag';
 import articleRating from './articleRatings';
+import search from './search';
 
 
 // Import fixtures
@@ -19,6 +20,7 @@ router.use('/users', users);
 router.use('/', auth);
 router.use('/articles', articles);
 router.use('/', tag);
+router.use('/', search);
 
 /*       ******** Fixture routes ****************
 */
