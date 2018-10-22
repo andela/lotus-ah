@@ -340,7 +340,6 @@ class ArticleController {
       ]
     })
       .then((articles) => {
-        console.log(articles);
         if (articles) {
           return res.status(200)
             .json({
