@@ -324,9 +324,7 @@ class ArticleController {
    * @memberof ArticleController
    */
   static getSingleArticle(req, res) {
-    const id = req.params.articleId,
-      userId = req.decoded.id;
-
+    const id = req.params.articleId;
     if (!(Number.isInteger(id)) && !Number(id)) {
       return res.status(400).json({
         status: 'FAILED',
@@ -336,7 +334,6 @@ class ArticleController {
     Article.findOne({
       where: {
         id,
-        userId,
       },
       include: [{
         model: Comment,

@@ -8,16 +8,18 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    type: {
+    roleName: {
       type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }),
   down: queryInterface => queryInterface.dropTable('roles')

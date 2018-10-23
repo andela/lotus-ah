@@ -178,4 +178,27 @@ describe('User Controller', () => {
         done();
       });
   });
+  it('should return 400 for updating user profile of another user', (done) => {
+    chai.request(app)
+      .put('/api/v1/users/profile/1')
+      .set('x-access-token', tokenCollect)
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body).to.be.a('object');
+        done();
+      });
+  });
+  it('should return 200 for updating user profile of a user', (done) => {
+    chai.request(app)
+      .put('/api/v1/users/profile/3')
+      .set('x-access-token', tokenCollect)
+      .send({ firstname: 'chisom', lastname: 'obulaworld', bio: 'Dev' })
+      .end((error, result) => {
+        expect(result.status).to.not.eql(400);
+        expect(result.status).to.eql(200);
+        expect(result.body).to.be.a('object');
+        done();
+      });
+  });
 });

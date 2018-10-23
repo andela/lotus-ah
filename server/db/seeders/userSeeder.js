@@ -16,6 +16,7 @@ const seeder = {
       firstName,
       username,
       lastName,
+      roleId: 1,
       bio
     };
   },
@@ -30,11 +31,12 @@ const seeder = {
     bcrypt.hash(password, 10)
       .then((userHash) => {
         User.create({
-          firstName: 'Okafor',
-          lastName: 'Emmanuel',
+          firstname: 'Okafor',
+          lastname: 'Emmanuel',
           username: 'DevOps',
           email: 'nondefyde@gmail.com',
-          password: userHash
+          password: userHash,
+          roleId: 1,
         }).then(() => done())
           .catch(err => done(err));
       })
