@@ -59,7 +59,12 @@ class AuthController {
             token,
             link: path,
           });
-      }).catch(error => error);
+      })
+      .catch(error => response.status(500)
+        .json({
+          status: 'failed',
+          message: error
+        }));
   }
 
 
