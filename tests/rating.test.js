@@ -2,6 +2,8 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
+import articleSeeder from '../server/db/seeders/articleSeeder';
+
 chai.use(chaiHttp);
 const { expect } = chai;
 
@@ -10,6 +12,30 @@ let articleSlug;
 
 
 describe('Testing Rating Article Routes', () => {
+  it('should add a new article', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles')
+      .set({
+        'x-access-token': userToken,
+      })
+      .send(articleSeeder.setArticleData(
+        'Policemen of this days are not yet here! Successfully',
+        `Doing good is right but is generally 
+        not common habit you can find on any one cute`,
+        'Doing good is right for you and I',
+        'whtdebjbwwimg.jpg',
+      ))
+      .end((err, res) => {
+        const {
+          message,
+          createdArticle
+        } = res.body;
+        articleSlug = createdArticle.slug;
+        expect(res.statusCode).to.equal(201);
+        expect(message).to.equal('Published article successfully');
+        return done();
+      });
+  });
   before((done) => {
     chai.request(app)
       .post('/api/v1/login')
@@ -28,9 +54,8 @@ describe('Testing Rating Article Routes', () => {
 
   it('Should get an article to rate', (done) => {
     // Making use of added article from previous test
-    const id = 2;
     chai.request(app)
-      .get(`/api/v1/articles/user/${id}`)
+      .get(`/api/v1/articles/${articleSlug}`)
       .set({
         'x-access-token': userToken,
       })
@@ -38,7 +63,6 @@ describe('Testing Rating Article Routes', () => {
         const {
           message,
         } = res.body;
-        articleSlug = res.body.Articles.slug;
         expect(res.statusCode).to.equal(200);
         expect(message).to.equal('Fetched a single user article');
         return done();

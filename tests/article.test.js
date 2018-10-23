@@ -11,6 +11,7 @@ const { expect } = chai;
 before(userSeeder.addUserToDb);
 
 let userToken;
+let currentSlug;
 
 
 before((done) => {
@@ -35,7 +36,7 @@ describe('Test article Controller', () => {
         'x-access-token': userToken,
       })
       .send(articleSeeder.setArticleData(
-        'Policemen of this days are not yet here!',
+        'Policemen of this days are not yet here! Successfully',
         `Doing good is right but is generally 
         not common habit you can find on any one cute`,
         'Doing good is right for you and I',
@@ -44,7 +45,9 @@ describe('Test article Controller', () => {
       .end((err, res) => {
         const {
           message,
+          createdArticle
         } = res.body;
+        currentSlug = createdArticle.slug;
         expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();
@@ -117,9 +120,10 @@ describe('Test article Controller', () => {
         return done();
       });
   });
+
   it('should update a specific user article', (done) => {
     chai.request(app)
-      .put('/api/v1/articles/user/1')
+      .put(`/api/v1/articles/user/${currentSlug}`)
       .set({
         'x-access-token': userToken,
       })
@@ -139,7 +143,6 @@ describe('Test article Controller', () => {
         return done();
       });
   });
-
 
   it('should return error message when body is not provided', (done) => {
     chai.request(app)
@@ -198,7 +201,7 @@ describe('Test article Controller', () => {
 
   it('should throw not found error', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/user/2')
+      .get('/api/v1/articles/Policemen-of-this-days-are-not-yet-here-507b411d-c4f3-4b23-9031-aae8ba7e5361')
       .set({
         'x-access-token': userToken,
       })
@@ -212,9 +215,9 @@ describe('Test article Controller', () => {
       });
   });
 
-  it('should list all specific user articles', (done) => {
+  it('should list a single user articles', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/user/1')
+      .get(`/api/v1/articles/${currentSlug}`)
       .set({
         'x-access-token': userToken,
       })
@@ -228,57 +231,9 @@ describe('Test article Controller', () => {
       });
   });
 
-  it('should return error if ID not valid', (done) => {
-    chai.request(app)
-      .get('/api/v1/articles/user/aq1')
-      .set({
-        'x-access-token': userToken,
-      })
-      .end((err, res) => {
-        const {
-          message,
-        } = res.body;
-        expect(res.statusCode).to.equal(400);
-        expect(message).to.equal('Article ID must be a number');
-        return done();
-      });
-  });
-
-  it('should return error if ID not valid', (done) => {
-    chai.request(app)
-      .delete('/api/v1/articles/user/aq1')
-      .set({
-        'x-access-token': userToken,
-      })
-      .end((err, res) => {
-        const {
-          message,
-        } = res.body;
-        expect(res.statusCode).to.equal(400);
-        expect(message).to.equal('Article ID must be a number');
-        return done();
-      });
-  });
-
-  it('should return error if not found', (done) => {
-    chai.request(app)
-      .delete('/api/v1/articles/user/2')
-      .set({
-        'x-access-token': userToken,
-      })
-      .end((err, res) => {
-        const {
-          message,
-        } = res.body;
-        expect(res.statusCode).to.equal(404);
-        expect(message).to.equal('Article not found or has been deleted');
-        return done();
-      });
-  });
-
   it('should delete a specific article for a user', (done) => {
     chai.request(app)
-      .delete('/api/v1/articles/user/1')
+      .delete(`/api/v1/articles/user/${currentSlug}`)
       .set({
         'x-access-token': userToken,
       })
@@ -292,7 +247,7 @@ describe('Test article Controller', () => {
       });
   });
 
-  it('should return 400 and message for article not found', (done) => {
+  it('should return 404 and message for article not found', (done) => {
     chai.request(app)
       .post('/api/v1/articles/1/like')
       .set({
@@ -302,7 +257,7 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
-        expect(res.statusCode).to.equal(400);
+        expect(res.statusCode).to.equal(404);
         expect(message).to.equal('Article not found or has been deleted');
         return done();
       });
@@ -423,6 +378,22 @@ describe('Test article Controller', () => {
         } = res.body;
         expect(res.statusCode).to.equal(200);
         expect(message).to.equal('All dislikes for this articles');
+        return done();
+      });
+  });
+
+  it('should like a specific user\'s article', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/1/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(404);
+        expect(message).to.equal('Article not found or has been deleted');
         return done();
       });
   });
