@@ -51,7 +51,6 @@ describe('Test Comment Controller', () => {
       ))
       .end((err, res) => {
         articleSlug = res.body.createdArticle.slug;
-        console.log('================>', articleSlug)
         const {
           message,
         } = res.body;
@@ -70,7 +69,6 @@ describe('Test Comment Controller', () => {
         'My first comment',
       ))
       .end((err, res) => {
-        console.log('================>', res.body)
         commentId = res.body.data.comment.id;
         const {
           message,
@@ -131,7 +129,7 @@ describe('Test Comment Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(404);
-        expect(message).to.equal('Article cannot be found');
+        expect(message).to.equal('Article not found');
         return done();
       });
   });
@@ -225,6 +223,102 @@ describe('Test Comment Controller', () => {
         } = res.body;
         expect(res.statusCode).to.equal(401);
         expect(message).to.equal('No token provided.');
+        return done();
+      });
+  });
+
+  it('should like a specific user\'s comment', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/comments/1/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(201);
+        expect(message).to.equal('you liked the comment');
+        return done();
+      });
+  });
+
+  it('should return 404 when comment is not found', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/comments/2/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(404);
+        expect(message).to.equal('comment not found');
+        return done();
+      });
+  });
+
+  it('should dislike a specific user\'s comment', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/comments/1/dislike')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(201);
+        expect(message).to.equal('you disliked the comment');
+        return done();
+      });
+  });
+
+  it('should fetch all likes for a comment', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/comments/2/like')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('All likes for this comment');
+        return done();
+      });
+  });
+
+  it('should fetch all dislikes for a comment', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/comments/${commentId}/dislike`)
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(200);
+        expect(message).to.equal('All dislikes for this comment');
+        return done();
+      });
+  });
+
+  it('should unlike a specific user\'s comment', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles/comments/1/unlike')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(201);
+        expect(message).to.equal('you unliked the comment');
         return done();
       });
   });

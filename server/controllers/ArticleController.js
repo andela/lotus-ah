@@ -6,9 +6,9 @@ import uuid from 'uuid';
 import {
   Article,
   FavoriteArticle,
-  Reaction,
   Comment,
   Tag,
+  Reaction
 } from '../db/models';
 import timeToRead from '../helpers/timeToRead';
 
@@ -108,18 +108,11 @@ class ArticleController {
         description,
         body
       } = req.body,
-      id = req.params.articleId,
+      currentSlug = req.params.slug,
       userId = req.decoded.id,
       imageUrl = null,
       readTime = timeToRead(body);
 
-    if (!(Number.isInteger(id)) && !Number(id)) {
-      return res.status(400)
-        .json({
-          status: 'FAILED',
-          message: 'Article ID must be a number',
-        });
-    }
     let tags = req.body.tags || [];
     if (tags.length > 5) {
       res.status(400).json({
@@ -130,57 +123,35 @@ class ArticleController {
     tags = ArticleController.tagIdExist(tags);
     Article.findOne({
       where: {
-        id,
+        slug: currentSlug,
         userId
       },
-      attributes: ['userId']
+      attributes: ['slug', 'userId', 'title', 'id']
     })
       .then((foundArticle) => {
         if (foundArticle) {
+          console.log(foundArticle);
           const value = {
-            id,
-            userId,
             title: (title) || foundArticle.title,
             description: (description) || foundArticle.description,
             body: (body) || foundArticle.body,
             imageUrl: (imageUrl) || foundArticle.imageUrl,
             readTime,
           };
-          foundArticle.update(value)
+          foundArticle.update(value, {
+            where: {
+              id: foundArticle.dataValues.id
+            }
+          })
             .then((tagArticle) => {
               foundArticle.setTags(tags)
                 .then(() => foundArticle.getTags({ attributes: ['id', 'name'] })
-                  .then((taglink) => {
-                    res.status(200).json({
-                      status: 'success',
-                      message: 'Article updated successfully',
-                      article: tagArticle,
-                      tags: taglink
-                    });
-                  }));
-              const condition = {
-                where: {
-                  id,
-                  userId
-                },
-                returning: true
-              };
-              return Article.update(value, condition)
-                .then((article) => {
-                  res.status(200)
-                    .json({
-                      message: 'Article updated successfully',
-                      data: article[1]
-                    });
-                });
-            })
-            .catch((err) => {
-              res.status(500)
-                .json({
-                  status: 'FAILED',
-                  message: 'Error processing request, please try again',
-                  Error: err.toString()
-                });
+                  .then(taglink => res.status(200).json({
+                    status: 'success',
+                    message: 'Article updated successfully',
+                    article: tagArticle,
+                    tags: taglink
+                  })));
             });
         } else {
           res.status(404).json({
@@ -188,14 +159,11 @@ class ArticleController {
           });
         }
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
 
@@ -207,27 +175,21 @@ class ArticleController {
    * @memberof ArticleController
    */
   static deleteArticle(req, res) {
-    const id = req.params.articleId,
+    const currentSlug = req.params.slug,
       userId = req.decoded.id;
 
-    if (!(Number.isInteger(id)) && !Number(id)) {
-      return res.status(400).json({
-        status: 'FAILED',
-        message: 'Article ID must be a number',
-      });
-    }
     Article.findOne({
       where: {
-        id,
+        slug: currentSlug,
         userId
       },
-      attributes: ['userId']
+      attributes: ['slug', 'userId', 'title', 'id']
     })
       .then((foundArticle) => {
         if (foundArticle) {
           return Article.destroy({
             where: {
-              id,
+              slug: currentSlug,
             }
           })
             .then(() => {
@@ -244,14 +206,11 @@ class ArticleController {
             message: 'Article not found or has been deleted',
           });
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -280,6 +239,11 @@ class ArticleController {
         through: {
           attributes: [],
         }
+      },
+      {
+        model: Reaction,
+        as: 'reactions',
+        attributes: ['id', 'likes', 'dislike']
       }],
       attributes: [
         'userId',
@@ -306,14 +270,11 @@ class ArticleController {
             message: 'Article not found or has been deleted',
           });
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -324,10 +285,8 @@ class ArticleController {
    * @memberof ArticleController
    */
   static getSingleArticle(req, res) {
-    const id = req.params.articleId,
-      userId = req.decoded.id;
-
-    if (!(Number.isInteger(id)) && !Number(id)) {
+    const currentSlug = req.params.slug;
+    if (!currentSlug) {
       return res.status(400).json({
         status: 'FAILED',
         message: 'Article ID must be a number',
@@ -335,8 +294,7 @@ class ArticleController {
     }
     Article.findOne({
       where: {
-        id,
-        userId,
+        slug: currentSlug,
       },
       include: [{
         model: Comment,
@@ -351,7 +309,11 @@ class ArticleController {
           attributes: [],
         }
       },
-      ],
+      {
+        model: Reaction,
+        as: 'reactions',
+        attributes: ['id', 'likes', 'dislike']
+      }],
       attributes: [
         'id',
         'userId',
@@ -379,14 +341,11 @@ class ArticleController {
             message: 'Article not found or has been deleted',
           });
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -410,6 +369,11 @@ class ArticleController {
         through: {
           attributes: [],
         }
+      },
+      {
+        model: Reaction,
+        as: 'reactions',
+        attributes: ['id', 'likes', 'dislike']
       }],
       attributes: [
         'id',
@@ -433,13 +397,11 @@ class ArticleController {
             });
         }
       })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -480,11 +442,11 @@ class ArticleController {
             });
         });
       })
-      .catch(() => res.status(500)
-        .json({
-          status: 'Failed',
-          message: 'Problem favouriting article',
-        }));
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -523,13 +485,11 @@ class ArticleController {
             message: 'Article removed from favourite',
           }
         ))
-      .catch(() => {
-        res.status(500)
-          .json({
-            status: 'Failed',
-            message: 'Problem removing article from favorite'
-          });
-      });
+      .catch(err => res.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -558,179 +518,12 @@ class ArticleController {
           result
         });
     })
-      .catch(() => {
-        res.status(500)
-          .json({
-            status: 'Failed',
-            message: 'Problem finding favourite article',
-          });
-      });
-  }
-
-  /**
-  * @static
-  * @param {object} req
-  * @param {object} res
-  * @description Like or Dislike of article
-  * @return {object} Object
-  * @memberof UserController
-  */
-  static like(req, res) {
-    const userId = req.decoded.id;
-    const articleId = Number(req.params.articleId);
-    const likes = req.params.likeType === 'like';
-    const dislike = req.params.likeType === 'dislike';
-    const message = likes || dislike ? `you ${req.params.likeType}d the article` : 'you unliked the article';
-
-    if (!(Number.isInteger(articleId)) && !Number(articleId)) {
-      return res.status(400).json({
+      .catch(err => res.status(500).json({
         status: 'FAILED',
-        message: 'Article ID must be a number',
-      });
-    }
-    Article.findOne({
-      where: {
-        id: articleId,
-        userId
-      },
-      attributes: [
-        'id',
-        'userId'
-      ]
-    }).then((foundArticle) => {
-      if (!foundArticle) {
-        return res.status(400).json({
-          status: 'FAILED',
-          message: 'Article not found or has been deleted',
-        });
-      }
-
-      return Reaction.findOrCreate({
-        where: {
-          userId,
-          articleId
-        },
-        attributes: ['id', 'userId', 'likes', 'dislike', 'articleId'],
-        defaults: {
-          likes,
-          dislike
-        }
-      })
-        .spread((DBdata, created) => {
-          if (!created) {
-            DBdata.likes = likes;
-            DBdata.dislike = dislike;
-            DBdata.save().catch(() => res.status(400).json({
-              status: 'FAILED',
-              message: 'Article not found or has been deleted',
-            }));
-          }
-          return res.status(200).json({
-            status: 'SUCCESS',
-            DBdata,
-            message
-          });
-        }).catch(err => res.status(500).json({
-          status: 'FAILED',
-          message: 'Error processing request, please try again',
-          error: err.toString()
-        }));
-    }).catch(err => res.status(500).json({
-      status: 'FAILED',
-      message: 'Error processing request, please try again',
-      error: err.toString()
-    }));
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
-
-  /**
-  * @static
-  * @param {object} req
-  * @param {object} res
-  * @description Get all Liked article
-  * @return {object} Object
-  * @memberof UserController
-  */
-  static getUserLikedArticles(req, res) {
-    const userId = req.decoded.id;
-    const articleId = Number(req.params.articleId);
-
-    Reaction.findAndCountAll({
-      attributes: ['id', 'userId', 'likes', 'articleId'],
-      where: {
-        userId,
-        articleId,
-        likes: true
-      }
-    })
-      .then((likes) => {
-        if (likes) {
-          return res.status(200)
-            .json({
-              status: 'SUCCESS',
-              message: 'All likes for this articles',
-              likes
-            });
-        }
-        res.status(404)
-          .json({
-            status: 'FAILED',
-            message: 'Article not found or has been deleted',
-          });
-      })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
-  }
-
-  /**
-  * @static
-  * @param {object} req
-  * @param {object} res
-  * @description Get all Disliked article
-  * @return {object} Object
-  * @memberof UserController
-  */
-  static getUserDislikedArticles(req, res) {
-    const userId = req.decoded.id;
-    const articleId = Number(req.params.articleId);
-
-    Reaction.findAndCountAll({
-      attributes: ['id', 'userId', 'dislike', 'articleId'],
-      where: {
-        userId,
-        articleId,
-        likes: false
-      }
-    })
-      .then((likes) => {
-        if (likes) {
-          return res.status(200)
-            .json({
-              status: 'SUCCESS',
-              message: 'All dislikes for this articles',
-              likes
-            });
-        }
-        res.status(404)
-          .json({
-            message: 'Article not found or has been deleted',
-          });
-      })
-      .catch((err) => {
-        res.status(500)
-          .json({
-            status: 'FAILED',
-            message: 'Error processing request, please try again',
-            Error: err.toString()
-          });
-      });
-  }
-
 
   /**
    * @static

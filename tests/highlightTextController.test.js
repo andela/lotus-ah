@@ -31,7 +31,7 @@ before((done) => {
       expect(res.statusCode).to.equal(200);
       if (err) return done(err);
       userToken = res.body.token;
-      userId = res.body.id
+      userId = res.body.id;
       done();
     });
 });
@@ -80,7 +80,7 @@ describe('Test Highlight Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(201);
-        expect(message).to.equal('Highlighted text has been commented on successfully' );
+        expect(message).to.equal('Highlighted text has been commented on successfully');
         return done();
       });
   });
@@ -98,7 +98,6 @@ describe('Test Highlight Controller', () => {
         'they are crook'
       ))
       .end((err, res) => {
-        console.log( '=========>', res.body);
         const {
           message,
         } = res.body;
@@ -169,7 +168,7 @@ describe('Test Highlight Controller', () => {
           message,
         } = res.body;
         expect(res.statusCode).to.equal(404);
-        expect(message).to.equal('Article cannot be found');
+        expect(message).to.equal('Article not found');
         return done();
       });
   });

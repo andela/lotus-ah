@@ -17,8 +17,8 @@ const getArticle = (request, response, next) => {
       if (!article) {
         return response.status(404)
           .json({
-            status: 'failed',
-            message: 'Article cannot be found'
+            status: 'FAILED',
+            message: 'Article not found'
           });
       }
       request.articleObject = article;
