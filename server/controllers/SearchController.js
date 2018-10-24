@@ -14,7 +14,6 @@ class SearchController {
    */
   static searchTag(request, response) {
     const { name } = request.params;
-    console.log(name);
     Tag.findAll({
       where: {
         $or: [

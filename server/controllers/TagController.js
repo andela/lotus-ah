@@ -16,14 +16,18 @@ class TagController {
      */
   static createTag(request, response) {
     const { name } = request.body;
-    Tag.findOrCreate({ where: { name } })
+    return Tag.findOrCreate({ where: { name } })
       .then(tag => response.status(201)
         .json({
           status: 'success',
           message: 'Tag was created',
           tag
         }))
-      .catch(error => error.message);
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -50,7 +54,11 @@ class TagController {
             tag
           });
       })
-      .catch(error => error.message);
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -62,7 +70,7 @@ class TagController {
    */
   static getArticleByTagId(request, response) {
     const { id } = request.params;
-    Tag.findOne({
+    return Tag.findOne({
       where: { id },
       include: [{
         model: Article,
@@ -89,13 +97,17 @@ class TagController {
               article
             });
         }
-        response.status(404)
+        return response.status(404)
           .json({
             status: 'failed',
             message: 'Tag id provided does not exist'
           });
       })
-      .catch(error => error.message);
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
   /**
@@ -107,7 +119,7 @@ class TagController {
    */
   static getArticleByTagName(request, response) {
     const { name } = request.params;
-    Tag.findOne({
+    return Tag.findOne({
       where: { name },
       include: [{
         model: Article,
@@ -127,21 +139,24 @@ class TagController {
     })
       .then((article) => {
         if (!article) {
-          response.status(404)
+          return response.status(404)
             .json({
               status: 'failed',
               message: 'Tag name provided does not exist'
             });
-        } else {
-          response.status(200)
-            .json({
-              status: 'success',
-              message: 'Tags with associated articles successfully obtained',
-              article
-            });
         }
+        return response.status(200)
+          .json({
+            status: 'success',
+            message: 'Tags with associated articles successfully obtained',
+            article
+          });
       })
-      .catch(error => error.message);
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 }
 export default TagController;

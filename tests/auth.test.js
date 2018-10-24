@@ -16,7 +16,6 @@ describe('Testing forgot password route', () => {
       .post('/api/v1/create_dummy_user')
       .send({ email: 'test999@gmail.com' })
       .end((error, response) => {
-        console.log(response.body);
         responseObject.link = response.body.link;
         expect(response.body.status).to.equals('success');
         expect(response.body.message).to.equals('User created successfully');
@@ -60,7 +59,6 @@ describe('Testing change password route', () => {
       .put(`/api/v1/auth/reset_password?token=${token}`)
       .send({ password: 'test12345', confirmPassword: 'test12345' })
       .end((error, response) => {
-        console.log(token);
         expect(response.body).to.be.an('object');
         expect(response.status).to.equals(401);
         expect(response.body.message).to.equals('Failed to authenticate');

@@ -49,7 +49,11 @@ class AuthController {
             link,
           });
       })
-      .catch(error => console.log(error));
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   }
 
 

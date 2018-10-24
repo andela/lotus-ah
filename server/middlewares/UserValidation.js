@@ -89,7 +89,6 @@ const validation = {
   */
   checkRequiredDetails(request, response, next) {
     const values = request.body;
-    console.log(request.file);
     const { password } = values;
     const required = ['firstname',
       'lastname', 'username', 'password', 'bio'];

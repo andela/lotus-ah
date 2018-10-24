@@ -59,7 +59,6 @@ describe('Testing Tag Controller', () => {
       .get('/api/v1/search/author/DevOps')
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
-        console.log('firstname', res.body);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.equals('All Author available');
         done();
@@ -70,7 +69,6 @@ describe('Testing Tag Controller', () => {
       .get('/api/v1/search/author/DevOps')
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
-        console.log('firstname', res.body);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.equals('All Author available');
         done();
