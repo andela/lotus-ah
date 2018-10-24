@@ -130,7 +130,6 @@ class ArticleController {
     })
       .then((foundArticle) => {
         if (foundArticle) {
-          console.log(foundArticle);
           const value = {
             title: (title) || foundArticle.title,
             description: (description) || foundArticle.description,

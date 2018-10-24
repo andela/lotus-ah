@@ -19,7 +19,6 @@ const validation = {
       attributes: ['roleId']
     })
       .then((user) => {
-        console.log('user', user);
         if (user && (user.dataValues.roleId !== 1)) {
           response.status(401).json({
             status: 'failed',
@@ -33,7 +32,12 @@ const validation = {
             message: 'User does not exist'
           });
         }
-      }).catch((err) => { console.log(err.message); });
+      })
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   },
 
   /**
@@ -60,7 +64,12 @@ const validation = {
             message: 'User does not exist'
           });
         }
-      }).catch((err) => { console.log(err.message); });
+      })
+      .catch(err => response.status(500).json({
+        status: 'FAILED',
+        message: 'Error processing request, please try again',
+        Error: err.toString()
+      }));
   },
 
 
