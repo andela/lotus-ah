@@ -7,7 +7,7 @@ const role = (sequelize, DataTypes) => {
     },
   },
   {
-    tableName: 'role'
+    tableName: 'roles'
   });
 
   Role.associate = (models) => {

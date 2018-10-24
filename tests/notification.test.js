@@ -154,7 +154,7 @@ describe('Test NotificationController', () => {
       {
         userid: 1,
         message: 'New article',
-        email: 'victor.ugwueze@gmail.com',
+        email: 'victor.ugwu@gmail.com',
         templateId: 'd-4823986320904dc3b623fec5f9c56829',
       }
     ];
