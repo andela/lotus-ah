@@ -130,6 +130,7 @@ class ArticleController {
     })
       .then((foundArticle) => {
         if (foundArticle) {
+          console.log(foundArticle);
           const value = {
             title: (title) || foundArticle.title,
             description: (description) || foundArticle.description,
@@ -285,6 +286,15 @@ class ArticleController {
    */
   static getSingleArticle(req, res) {
     const currentSlug = req.params.slug;
+<<<<<<< HEAD
+=======
+    if (!currentSlug) {
+      return res.status(400).json({
+        status: 'FAILED',
+        message: 'Article ID must be a number',
+      });
+    }
+>>>>>>> 3a66493... feat(like-dislike-unlike-comments): implemented like dislike and unlike of comments functionality
     Article.findOne({
       where: {
         slug: currentSlug,
