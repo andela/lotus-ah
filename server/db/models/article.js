@@ -24,6 +24,10 @@ const article = (sequelize, DataTypes) => {
     description: {
       type: DataTypes.TEXT
     },
+    isReported: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: DataTypes.FALSE
+    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: true

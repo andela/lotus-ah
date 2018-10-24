@@ -4,21 +4,21 @@ import { Role } from '../models';
 const roleSeeder = {
   addFirstRoleToDb(done) {
     Role.create({
-      type: 'Admin',
+      type: 'ADMIN',
     })
       .then(() => done())
       .catch(err => done(err));
   },
   addSecondRoleToDb(done) {
     Role.create({
-      type: 'User',
+      type: 'USER',
     })
       .then(() => done())
       .catch(err => done(err));
   },
   addThirdRoleToDb(done) {
     Role.create({
-      type: 'Author',
+      type: 'AUTHOR',
     })
       .then(() => done())
       .catch(err => done(err));
