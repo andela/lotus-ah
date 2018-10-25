@@ -6,11 +6,12 @@
   "scripts": {
     "build": "webpack --config webpack.config.prod.js",
     "client:dev": "webpack-dev-server --config webpack.config.dev.js --progress --colors",
-    "start:dev": "cross-env NODE_ENV=development npm run lint:server && nodemon --exec babel-node -- index.js",
+    "start:dev": "cross-env NODE_ENV=development npm run seed:role:dev && npm run lint:server && nodemon --exec babel-node -- index.js",
     "start": "cross-env NODE_ENV=production npm run migration && node --require @babel/register -- index.js",
     "lint:client": "eslint client/ --fix",
     "lint:server": "eslint server/ --fix",
     "migration": "sequelize db:migrate",
+    "seed:role:dev":" sequelize db:seed --seed 20181017122757-role-seeder",
     "seed:role":" cross-env NODE_ENV=test sequelize db:seed --seed 20181017122757-role-seeder",
     "seed:admin": " cross-env NODE_ENV=test sequelize db:seed --seed 20181018102617-admin",
     "seed:user": "sequelize db:seed --seed 20181018103845-user",

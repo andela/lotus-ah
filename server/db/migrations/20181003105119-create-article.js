@@ -32,6 +32,10 @@ module.exports = {
       type: Sequelize.TEXT,
       allowNull: false
     },
+    isReported: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true
+    },
     body: {
       type: Sequelize.TEXT
     },

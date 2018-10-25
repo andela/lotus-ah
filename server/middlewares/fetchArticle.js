@@ -8,7 +8,7 @@ const getArticle = (request, response, next) => {
       as: 'users',
       attributes: ['firstname', 'lastname', 'username']
     }],
-    attributes: ['id', 'title', 'body', 'slug', 'description'],
+    attributes: ['id', 'title', 'body', 'slug', 'description', 'isReported'],
     where: {
       slug: request.params.slug
     }
