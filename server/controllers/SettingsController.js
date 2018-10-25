@@ -2,6 +2,7 @@ import {
   NotificationSubscription,
 } from '../db/models';
 
+
 /**
  * @class SettingsController
  * @description sends email notification
@@ -14,19 +15,24 @@ class SettingsController {
    * @memberof SettingsController
    * @returns {objec} response
    */
-  static unsbscribeNotification(req, res) {
+  static updateNotificationSubscription(req, res) {
     const userId = req.authUser.id;
-    const { notificationType } = req.body;
+    const { notificationType, subscribe } = req.body;
+    let message = `You have subscribed to receiving ${notificationType} notifications`;
+    const isSubscribed = (subscribe === 'true');
+    if (!subscribe) {
+      message = `You have unsubscribed from reciving ${notificationType} notifications`;
+    }
     NotificationSubscription.update({
       userId,
-      isSubscribed: false,
+      isSubscribed,
     },
     {
       where: { userId, notificationType, }
     }).then(() => res.status(200)
       .json({
         status: 'Success',
-        message: `You have unsubscribed from reciving ${notificationType} notifications`
+        message,
       }));
   }
 }

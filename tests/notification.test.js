@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
-import userSeeder from '../server/db/seeders/userSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
 
 // Controller methods for unit testing
 import NotificationController from '../server/controllers/NotificationController';
@@ -91,6 +91,7 @@ describe('Test NotificationController', () => {
       })
       .send({
         notificationType,
+        subscribe: false,
       })
       .end((err, res) => {
         const {
@@ -101,7 +102,26 @@ describe('Test NotificationController', () => {
         done();
       });
   });
-
+  it('should subscribe a user to continue receiving a specific notification', (done) => {
+    const notificationType = 'publish';
+    chai.request(app)
+      .put('/api/v1/me/settings/notifications')
+      .set({
+        'x-access-token': userToken,
+      })
+      .send({
+        notificationType,
+        subscribe: true,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.status).to.equal(200);
+        expect(message).to.equal(`You have subscribed to receiving ${notificationType} notifications`);
+        done();
+      });
+  });
   it('should create bulk notifications for many users', (done) => {
     const message = 'You have a new notitfication';
 
@@ -128,7 +148,7 @@ describe('Test NotificationController', () => {
       {
         userid: 1,
         message: 'New article',
-        email: 'victorugwueze@gmail.com',
+        email: 'victor@gmail.com',
         templateId: 'd-4823986320904dc3b623fec5f9c56829',
       },
       {

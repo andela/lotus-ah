@@ -7,10 +7,6 @@ import articleRating from './articleRatings';
 import search from './search';
 import admin from './admin';
 import notification from './notification';
-
-
-// Import fixtures
-import createUser from '../../fixtures/user';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
 import followRoute from './follow';
@@ -26,18 +22,6 @@ router.use('/', tag);
 router.use('/', search);
 router.use('/', notification);
 
-/*       ******** Fixture routes ****************
-*/
-router.post('/create_dummy_user', createUser);
-
-/*      ********* End fixture routes *************   */
-
-
-/*       ******** Fixture routes ****************
-*/
-router.post('/users/create', createUser);
-
-/*      ********* End fixture routes *************   */
 
 router.use('/', users);
 router.use('/auth', socialAuth);

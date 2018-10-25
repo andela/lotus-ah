@@ -11,17 +11,6 @@ const responseObject = {};
 
 
 describe('Testing forgot password route', () => {
-  it('Should create dummy user', (done) => {
-    chai.request(app)
-      .post('/api/v1/create_dummy_user')
-      .send({ email: 'test999@gmail.com' })
-      .end((error, response) => {
-        expect(response.body.status).to.equals('success');
-        expect(response.body.message).to.equals('User created successfully');
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
   it('Should not return a reset password link with user not found', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')
@@ -38,7 +27,7 @@ describe('Testing forgot password route', () => {
   it('Should return a reset password link', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')
-      .send({ email: 'test999@gmail.com' })
+      .send({ email: 'chisomobuladike@gmail.com' })
       .end((error, response) => {
         responseObject.link = response.body.link;
         responseObject.token = response.body.token;

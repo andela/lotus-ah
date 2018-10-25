@@ -3,9 +3,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 // Seeder files
-import userSeeder from '../server/db/seeders/userSeeder';
-import articleSeeder from '../server/db/seeders/articleSeeder';
-import highlightTextSeeder from '../server/db/seeders/highlightTextSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
+import articleSeeder from '../server/db/seeder/articleSeeder';
+import highlightTextSeeder from '../server/db/seeder/highlightTextSeeder';
 
 // modules
 import app from '../index';

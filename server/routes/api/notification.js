@@ -33,7 +33,7 @@ notificationRouter.put(
   '/me/settings/notifications',
   auth.verifyUserToken,
   fetchUser,
-  SettingsController.unsbscribeNotification
+  SettingsController.updateNotificationSubscription
 );
 
 export default notificationRouter;
