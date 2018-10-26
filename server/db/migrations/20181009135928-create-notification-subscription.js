@@ -11,6 +11,10 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       defaultValue: true
     },
+    notificationTypeId: {
+      allowNull: false,
+      type: Sequelize.INTEGER
+    },
     userId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',

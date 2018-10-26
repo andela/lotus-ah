@@ -2,9 +2,9 @@
 import {
   Article,
   Reaction,
-  // Comment,
+  User,
 } from '../db/models';
-
+import NotificationController from './NotificationController';
 
 /**
  * @class ArticleController
@@ -22,6 +22,7 @@ class LikesController {
   */
   static likeArticle(req, res) {
     const userId = req.decoded.id;
+    const user = req.authUser;
     const articleId = Number(req.params.articleId);
     const likes = req.params.likeType === 'like';
     const dislike = req.params.likeType === 'dislike';
@@ -34,13 +35,27 @@ class LikesController {
       });
     }
     Article.findOne({
+      include: [
+        {
+          model: User,
+          as: 'users',
+          attributes: [
+            'id',
+            'email',
+            'firstname',
+            'username',
+            'lastname'
+          ]
+        }
+      ],
       where: {
         id: articleId,
-        userId
       },
       attributes: [
         'id',
-        'userId'
+        'userId',
+        'title',
+        'slug'
       ]
     }).then((foundArticle) => {
       if (!foundArticle) {
@@ -49,7 +64,7 @@ class LikesController {
           message: 'Article not found or has been deleted',
         });
       }
-
+      const author = foundArticle.users.dataValues;
       return Reaction.findOrCreate({
         where: {
           userId,
@@ -70,6 +85,20 @@ class LikesController {
               message: 'Article not found or has been deleted',
             }));
           }
+          const notify = {
+            type: 'like',
+            article: foundArticle.dataValues.title,
+            authenticatedUser: user,
+            author,
+            articleUrl: `${process.env.BASE_URL}/api/v1/articles/${foundArticle.dataValues.slug}`,
+            message: `${user.firstname} liked your article`
+          };
+          NotificationController.notifyFollowers(
+            {
+              followerType: 'article',
+              notify,
+            }
+          );
           return res.status(200).json({
             status: 'SUCCESS',
             DBdata,
@@ -182,6 +211,8 @@ class LikesController {
   */
   static likeComment(req, res) {
     const comment = req.commentObject;
+    const authenticatedUser = req.authUser;
+    const commentOwner = comment.user.dataValues;
     const userId = req.decoded.id;
     const commentId = comment.id;
     const likes = req.params.likeType === 'like';
@@ -207,6 +238,16 @@ class LikesController {
             status: 'FAILED',
             message: 'Comment not found or has been deleted',
           }));
+        }
+        const notify = {
+          user: commentOwner,
+          email: commentOwner.email,
+          templateId: 'd-c2a36f6d193a47d8bb479472b41bfceb',
+          message: `Hey ${authenticatedUser.firstname} liked your comment on ${comment.commentBody}`,
+        };
+        // I shouldn't receive notification when I like my own comment
+        if (commentOwner.id !== authenticatedUser.id) {
+          NotificationController.notifyUser(notify, commentOwner.id);
         }
         return res.status(201).json({
           status: 'SUCCESS',

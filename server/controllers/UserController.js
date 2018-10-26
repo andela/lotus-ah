@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 // module importaions
 import { User } from '../db/models';
 import EmailController from './EmailController';
+import NotificationController from './NotificationController';
 
 // middlewares
 import auth from '../middlewares/TokenVerification';
@@ -35,7 +36,7 @@ class UserController {
         if (!created) {
           const { isActivated } = user.dataValues;
           if (isActivated === false) {
-            const result = EmailController.validationEmail(user.dataValues);
+            const result = EmailController.sendVerificationEmail(user.dataValues);
             return response.status(200).json({
               status: 'Success',
               message: 'A verification email has been resent to this email',
@@ -47,7 +48,7 @@ class UserController {
             message: 'Email exists'
           });
         }
-        const result = EmailController.validationEmail(user.dataValues);
+        const result = EmailController.sendVerificationEmail(user.dataValues);
         return response.status(201).json({
           message: 'A verification email has been sent to this email ',
           user,
@@ -107,16 +108,27 @@ class UserController {
     userDetails.password = bcrypt.hashSync(userDetails.password, 10);
     User.update(userDetails, { where: { id: request.decoded.id }, returning: true, plain: true })
       .then((user) => {
+        const userObject = user[1].dataValues;
+        const updateUser = {
+          id: userObject.id,
+          email: userObject.email,
+          firstname: userObject.firstname,
+          lastname: userObject.lastname,
+          imageUrl: userObject.imageUrl,
+          bio: userObject.bio,
+        };
+        NotificationController.setupUserSubsscription(updateUser.id);
         const userToken = auth.authenticate({
-          id: user[1].dataValues.id, email: user[1].dataValues.email
+          id: updateUser.id, email: updateUser.email
         });
         response.status(200).json({
           status: 'success',
           message: 'User Update was Successfull',
           token: userToken,
+          updateUser,
         });
       })
-      .catch(err => (err.message));
+      .catch(err => err.message);
   }
 
   /**

@@ -11,6 +11,10 @@ const notification = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    message: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
@@ -26,10 +30,6 @@ const notification = (sequelize, DataTypes) => {
   Notificatioin.associate = (models) => {
     Notificatioin.belongsTo(models.User, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
-    Notificatioin.belongsTo(models.NotificationType, {
-      foreignKey: 'notificationTypeId',
       onDelete: 'CASCADE'
     });
   };

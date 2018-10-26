@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 
 // moduler importations
 import app from '..';
-import userSeeder from '../server/db/seeders/userSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
 
 
 chai.use(chaiHttp);

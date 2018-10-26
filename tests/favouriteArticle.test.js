@@ -2,15 +2,15 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
-import userSeeder from '../server/db/seeders/userSeeder';
-import articleSeeder from '../server/db/seeders/articleSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
+import articleSeeder from '../server/db/seeder/articleSeeder';
 
 chai.use(chaiHttp);
 const { expect } = chai;
 
-before(userSeeder.addUserToDb);
 
 let userToken;
+let articleSlug;
 
 before((done) => {
   chai.request(app)
@@ -45,6 +45,7 @@ describe('Test article Controller', () => {
         const {
           message,
         } = res.body;
+        articleSlug = res.body.createdArticle.slug;
         expect(res.status).to.equal(201);
         expect(message).to.equal('Published article successfully');
         done();
@@ -52,9 +53,8 @@ describe('Test article Controller', () => {
   });
 
   it('should add article to user favorites', (done) => {
-    const articleId = 2;
     chai.request(app)
-      .post(`/api/v1/articles/${articleId}/favourite`)
+      .post(`/api/v1/articles/${articleSlug}/favourite`)
       .set({
         'x-access-token': userToken,
       })
@@ -66,15 +66,15 @@ describe('Test article Controller', () => {
   });
 
   it('should not add article to user favorites when article does not exist', (done) => {
-    const articleId = 10;
+    const slug = 'adschsdhcvbhdvxch bdhs-26392-7439-3j';
     chai.request(app)
-      .post(`/api/v1/articles/${articleId}/favourite`)
+      .post(`/api/v1/articles/${slug}/favourite`)
       .set({
         'x-access-token': userToken,
       })
       .end((err, res) => {
         expect(res.status).to.equal(404);
-        expect(res.body.message).to.equal('Article does not exist');
+        expect(res.body.message).to.equal('Article not found');
         done();
       });
   });
@@ -94,9 +94,8 @@ describe('Test article Controller', () => {
   });
 
   it('should remove article from user favorites', (done) => {
-    const articleId = 2;
     chai.request(app)
-      .delete(`/api/v1/articles/${articleId}/favourite`)
+      .delete(`/api/v1/articles/${articleSlug}/favourite`)
       .set({
         'x-access-token': userToken,
       })

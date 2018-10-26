@@ -1,5 +1,8 @@
 import Sequelize from 'sequelize';
 import { Article, Rating } from '../db/models';
+import NotificationController from './NotificationController';
+import auth from '../middlewares/TokenVerification';
+
 
 /**
  * @class ArticleRatingCointroller
@@ -15,40 +18,30 @@ class ArticleRatingCointroller {
     */
   static addRating(req, res) {
     const userId = req.decoded.id;
-    const { slug } = req.params;
+    const authenticatedUser = req.authUser;
+    const articele = req.articleObject.dataValues;
+    const { author } = req;
     const { rating } = req.body;
-    Article.findOne({
-      where: {
-        slug
+    const articleId = articele.id;
+
+    return Rating.findOrCreate({
+      where: { userId, articleId },
+      attributes: [
+        'rating'
+      ],
+      defaults: {
+        rating,
       }
-    }).then((article) => {
-      if (article === null) {
-        return res.status(404)
+    }).then((ratings) => {
+      if (ratings) {
+        ArticleRatingCointroller
+          .addRatingToArticle(articleId, rating, authenticatedUser, author);
+        res.status(201)
           .json({
             status: 'Success',
-            message: 'Article not found'
+            message: 'Your rating has been recorded'
           });
       }
-      const articleId = article.dataValues.id;
-      return Rating.findOrCreate({
-        where: { userId, articleId },
-        attributes: [
-          'rating'
-        ],
-        defaults: {
-          rating,
-        }
-      }).then((ratings) => {
-        if (ratings) {
-          ArticleRatingCointroller
-            .addRatingToArticle(articleId);
-          res.status(201)
-            .json({
-              status: 'Success',
-              message: 'Your rating has been recorded'
-            });
-        }
-      });
     })
       .catch(err => res.status(500)
         .json({
@@ -60,12 +53,15 @@ class ArticleRatingCointroller {
 
   /**
  * @static
- * @param {integer} articleId
- * @param {intger} userId
  * @description get average rating
+ * @param {integer} articleId
+ * @param {intger} rating
+ * @param {object} authenticatedUser
+ * @param {object} author
  * @returns {object} object
+ * @member ArticleRatingCointroller
  */
-  static addRatingToArticle(articleId) {
+  static addRatingToArticle(articleId, rating, authenticatedUser, author) {
     return Rating.findAll({
       where: { articleId },
       attributes: [
@@ -81,6 +77,25 @@ class ArticleRatingCointroller {
         where: { id: articleId }
       });
     })
+      .then((articele) => {
+        const notify = {
+          type: 'like',
+          articleId,
+          rating,
+          message: `new rating has been added to your article ${articele.title}`,
+          user: authenticatedUser,
+          messageForAuthor: `Hey ${auth.firstname}, ${authenticatedUser.firstname} rated your article
+          ${articele.title}
+          `,
+          author,
+        };
+        NotificationController.notifyFollowers(
+          {
+            followerType: 'article',
+            notify,
+          }
+        );
+      })
       .catch(error => error);
   }
 }

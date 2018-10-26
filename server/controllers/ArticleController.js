@@ -11,8 +11,7 @@ import {
   Reaction
 } from '../db/models';
 import timeToRead from '../helpers/timeToRead';
-
-
+import NotificationController from './NotificationController';
 /**
  * @class ArticleController
  * @desc This is a class controller
@@ -49,9 +48,10 @@ class ArticleController {
       imageUrl = req.file.path;
     }
     const articleSlug = ArticleController.makeSlug(title);
+    const authenticatedUser = req.authUser;
     let tags = req.body.tags || [];
     if (tags.length > 5) {
-      res.status(400).json({
+      return res.status(400).json({
         status: 'failed',
         message: 'Tags should not exceed 5',
       });
@@ -81,7 +81,21 @@ class ArticleController {
           }]
         })
           .then((createdArticle) => {
-            res.status(201).json({
+            const notify = {
+              type: 'publish',
+              article: createdArticle.title,
+              author: authenticatedUser,
+              authenticatedUser,
+              articleUrl: `${process.env.BASE_URL}/api/v1/articles/${createdArticle.slug}`,
+              message: `${authenticatedUser.firstname} published new artilce`
+            };
+            NotificationController.notifyFollowers(
+              {
+                followerType: 'authorFollowers',
+                notify,
+              }
+            );
+            return res.status(201).json({
               status: 'SUCCESS',
               message: 'Published article successfully',
               createdArticle
@@ -414,33 +428,21 @@ class ArticleController {
    * @returns { object } object
    */
   static addFavourite(req, res) {
-    const articleId = req.params.id;
+    const articleId = req.articleObject.dataValues.id;
     const userId = req.decoded.id;
-    Article.findOne({
-      where: { id: articleId }
-    })
-      .then((article) => {
-        if (!article) {
-          return res.status(404)
-            .json({
-              status: 'Success',
-              message: 'Article does not exist',
-            });
-        }
-        return FavoriteArticle.findOrCreate({
-          include: [{
-            model: Article,
-          }],
-          where: { userId, articleId }
-        }).then((result) => {
-          res.status(200)
-            .json({
-              status: 'Success',
-              message: 'Article added to favorite',
-              article: result,
-            });
+    return FavoriteArticle.findOrCreate({
+      include: [{
+        model: Article,
+      }],
+      where: { userId, articleId }
+    }).then((result) => {
+      res.status(200)
+        .json({
+          status: 'Success',
+          message: 'Article added to favorite',
+          article: result,
         });
-      })
+    })
       .catch(err => res.status(500).json({
         status: 'FAILED',
         message: 'Error processing request, please try again',
@@ -460,35 +462,22 @@ class ArticleController {
    */
   static removeFavourite(req, res) {
     const userId = req.decoded.id;
-    const articleId = req.params.id;
-    Article.findOne({
-      where: { id: articleId }
+    const articleId = req.articleObject.dataValues.id;
+
+    FavoriteArticle.destroy({
+      where: { userId, articleId }
     })
-      .then(article => article)
-      .then((article) => {
-        if (!article) {
-          return res.status(404)
-            .json({
-              status: 'Success',
-              message: 'Article does not exist',
-            });
-        }
-        return FavoriteArticle.destroy({
-          where: { userId, articleId }
-        });
-      })
       .then(() => res.status(200)
-        .json(
-          {
-            status: 'Success',
-            message: 'Article removed from favourite',
-          }
-        ))
-      .catch(err => res.status(500).json({
-        status: 'FAILED',
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+        .json({
+          status: 'Success',
+          message: 'Article removed from favourite',
+        }))
+      .catch(err => res.status(500)
+        .json({
+          status: 'FAILED',
+          message: 'Error processing request, please try again',
+          Error: err.toString()
+        }));
   }
 
   /**

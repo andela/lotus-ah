@@ -104,7 +104,10 @@ const user = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'notifications'
     });
-    User.hasOne(models.NotificationSubscription);
+    User.hasMany(models.NotificationSubscription, {
+      foreignKey: 'userId',
+      as: 'subscriptions'
+    });
     User.belongsToMany(User, {
       as: 'followers',
       through: models.Follow,

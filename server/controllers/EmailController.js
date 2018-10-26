@@ -5,10 +5,9 @@ require('dotenv').config();
 
 const key = process.env.SENDGRID_API_KEY;
 const cert = process.env.SECRET;
-const appUrl = process.env.APPURL;
+const appUrl = process.env.BASE_URL;
 /**
- *
- *
+ * @description sends email with SendGrid
  * @class UserController
  */
 class EmailController {
@@ -19,25 +18,41 @@ class EmailController {
 * @description Sending email to users that signup
 * @memberof EmailController
 */
-  static validationEmail(user) {
+  static sendVerificationEmail(user) {
+    const { email, id } = user;
+    const emailToken = jwt.sign({ email, id }, cert, { expiresIn: '1h' });
+    const data = {};
+    data.token = emailToken;
+    const activationLink = `${appUrl}/api/v1/users/confirmation?token=${emailToken}`;
+    const singupLink = `${appUrl}/api/v1/users`;
+    const emailObject = [{
+      to: email,
+      from: 'authorhavencommunity@gmail.com',
+      subject: 'Welcome to Authors Haven',
+      text: 'Hello',
+      templateId: 'd-c29248e430734bf59d3fdd8f107a9b2c',
+      dynamic_template_data: { activationLink, singupLink }
+    }];
+    const isMailsent = this.sendMail(emailObject);
+    if (isMailsent) {
+      return { token: data.token, success: true };
+    }
+    return { token: data.token, success: false };
+  }
+
+  /**
+   * @param {object} emailObject
+   * @description sends email to a single user or array of users
+   * @memberof EmailController
+   * @returns {object} object
+   */
+  static sendMail(emailObject) {
     try {
       sgMail.setApiKey(key);
-      const { email, id } = user;
-      const emailToken = jwt.sign({ email, id }, cert, { expiresIn: '1h' });
-      const url = `${appUrl}/api/v1/users/confirmation?token=${emailToken}`;
-      const msg = {
-        to: email,
-        from: 'authorhavencommunity@gmail.com',
-        subject: 'Welcome to Authors Haven ',
-        text: 'Just a step away',
-        templateId: 'd-2b4ba0b023f84649af3486d921b40694',
-        dynamic_template_data: { token: emailToken, url }
-      };
-      const sentmail = sgMail.send(msg);
-      if (sentmail) {
-        return { token: emailToken, success: true };
+      if (Array.isArray(emailObject)) {
+        return sgMail.sendMultiple(emailObject);
       }
-      return { token: emailToken, success: false };
+      return sgMail.send(emailObject);
     } catch (error) {
       return false;
     }

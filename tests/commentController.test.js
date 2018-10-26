@@ -3,9 +3,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 // Seeder files
-import userSeeder from '../server/db/seeders/userSeeder';
-import articleSeeder from '../server/db/seeders/articleSeeder';
-import commentSeeder from '../server/db/seeders/commentSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
+import articleSeeder from '../server/db/seeder/articleSeeder';
+import commentSeeder from '../server/db/seeder/commentSeeder';
 
 // modules
 import app from '../index';
@@ -13,8 +13,6 @@ import app from '../index';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-before(userSeeder.emptyUserTable);
-before(userSeeder.addUserToDb);
 
 let userToken;
 let articleSlug;

@@ -27,6 +27,7 @@ const ArticleRoute = Router();
 
 ArticleRoute.post('/',
   Auth.verifyUserToken,
+  getUser,
   multerUploads,
   articleValidation(schemas.articleSchema),
   ArticleController.createArticle)
@@ -110,6 +111,7 @@ ArticleRoute.get('/:slug',
 
 ArticleRoute.post('/comments/:commentId/:likeType',
   Auth.verifyUserToken,
+  getUser,
   getComment,
   LikesController.likeComment);
 
@@ -123,10 +125,12 @@ ArticleRoute.get('/comments/:commentId/dislike',
 
 // Favourite an article routes
 
-ArticleRoute.post('/:id/favourite',
+ArticleRoute.post('/:slug/favourite',
   Auth.verifyUserToken,
+  getArticle,
   ArticleController.addFavourite)
-  .delete('/:id/favourite',
+  .delete('/:slug/favourite',
+    getArticle,
     Auth.verifyUserToken,
     ArticleController.removeFavourite);
 
@@ -134,6 +138,7 @@ ArticleRoute.post('/:id/favourite',
 
 ArticleRoute.post('/:articleId/:likeType',
   Auth.verifyUserToken,
+  getUser,
   LikesController.likeArticle);
 
 ArticleRoute.get('/:articleId/like',

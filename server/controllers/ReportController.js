@@ -14,7 +14,7 @@ class ReportController {
    * @memberof ReportController
    */
   static reportArticle(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     const userId = user.id;
     const articleId = article.id;
@@ -82,7 +82,7 @@ class ReportController {
   * @memberof ReportController
   */
   static resolveReport(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     const articleId = article.id;
 
@@ -168,7 +168,7 @@ class ReportController {
   * @memberof ReportController
   */
   static fetchReportForASingleArticle(request, response) {
-    const user = request.userObject.dataValues;
+    const user = request.authUser;
     const article = request.articleObject.dataValues;
     if (user.roleId !== Number(1)) {
       return response.status(401).json({

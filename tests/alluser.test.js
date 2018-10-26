@@ -8,6 +8,7 @@ import app from '..';
 chai.use(chaiHttp);
 const { expect } = chai;
 let tokenCollect;
+let updatedUserId;
 const tokenFailed = 'bbfehfbeybdhvifnvf.fefwybhebvehvhevbh';
 const userDetails = {
   firstname: 'chisom',
@@ -106,6 +107,7 @@ describe('User Controller', () => {
       .query({ token: tokenCollect })
       .end((error, result) => {
         expect(result.status).to.eql(200);
+        updatedUserId = result.body.updateUser.id;
         expect(result.body).to.be.a('object');
         done();
       });
@@ -191,7 +193,7 @@ describe('User Controller', () => {
   });
   it('should return 200 for updating user profile of a user', (done) => {
     chai.request(app)
-      .put('/api/v1/users/profile/3')
+      .put(`/api/v1/users/profile/${updatedUserId}`)
       .set('x-access-token', tokenCollect)
       .send({ firstname: 'chisom', lastname: 'obulaworld', bio: 'Dev' })
       .end((error, result) => {

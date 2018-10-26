@@ -6,7 +6,15 @@ const getArticle = (request, response, next) => {
     include: [{
       model: User,
       as: 'users',
-      attributes: ['firstname', 'lastname', 'username']
+      attributes: [
+        'id',
+        'email',
+        'firstname',
+        'lastname',
+        'bio',
+        'username',
+        'imageUrl'
+      ]
     }],
     attributes: ['id', 'title', 'body', 'slug', 'description', 'isReported'],
     where: {

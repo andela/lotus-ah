@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 
 // created server components
 import server from '..';
-import userSeeder from '../server/db/seeders/userSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
 
 // Follow model
 import { Follow } from '../server/db/models';
