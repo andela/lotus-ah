@@ -5,6 +5,13 @@ const comment = (sequelize, DataTypes) => {
     commentBody: {
       type: DataTypes.STRING
     },
+    lien: {
+      type: DataTypes.INTEGER,
+      defaultValue: 3
+    },
+    commentEditCount: {
+      type: DataTypes.INTEGER,
+    },
     userId: {
       type: DataTypes.INTEGER,
       onDelete: 'CASCADE',

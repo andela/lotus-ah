@@ -66,13 +66,9 @@ ArticleRoute.get('/:slug/highlights',
 
 // Route for comments
 ArticleRoute.post('/:slug/comments',
-  Auth.verifyUserToken,
-  getUser,
-  getArticle,
-  CommentValidation.validateComment,
-  CommentController.addCommentToArticle);
-
-ArticleRoute.put('/comments/:id',
+  Auth.verifyUserToken, getUser, getArticle,
+  CommentValidation.validateComment, CommentController.addCommentToArticle);
+ArticleRoute.put('/:slug/comments/:commentId/edit',
   Auth.verifyUserToken,
   CommentValidation.validateUpdateComment,
   CommentValidation.validateComment,
@@ -122,6 +118,12 @@ ArticleRoute.get('/comments/:commentId/like',
 ArticleRoute.get('/comments/:commentId/dislike',
   Auth.verifyUserToken,
   LikesController.getUserDislikedComments);
+
+
+// Route to fetch commentHistory
+ArticleRoute.get('/:slug/comments/:commentId',
+  Auth.verifyUserToken, getArticle,
+  CommentController.fetchCommentHistory);
 
 // Favourite an article routes
 

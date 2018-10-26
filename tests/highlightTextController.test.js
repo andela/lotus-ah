@@ -69,8 +69,8 @@ describe('Test Highlight Controller', () => {
       .send(highlightTextSeeder.setHighlightSeeder(
         userId,
         articleId,
-        'Policemen',
-        'they are crook'
+        'Doing good',
+        'Policemen'
       ))
       .end((err, res) => {
         // commentId = res.body.data.comment.id;
@@ -92,8 +92,8 @@ describe('Test Highlight Controller', () => {
       .send(highlightTextSeeder.setHighlightSeeder(
         userId,
         articleId,
-        'Policemen',
-        'they are crook'
+        'Doing good',
+        'Policemen'
       ))
       .end((err, res) => {
         const {
@@ -158,8 +158,8 @@ describe('Test Highlight Controller', () => {
       .send(highlightTextSeeder.setHighlightSeeder(
         userId,
         articleId,
-        'they are crook',
-        'In my mind, i love this'
+        'Doing good',
+        'Policemen'
       ))
       .end((err, res) => {
         const {
@@ -180,8 +180,8 @@ describe('Test Highlight Controller', () => {
       .send(highlightTextSeeder.setHighlightSeeder(
         userId,
         articleId,
-        'they are crook',
-        'In my mind, i love this'
+        'Doing good',
+        'Policemen'
       ))
       .end((err, res) => {
         const {
