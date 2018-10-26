@@ -10,7 +10,7 @@ const getUser = (request, response, next) => {
     where: {
       id
     },
-    attributes: ['id', 'email', 'username', 'bio', 'imageUrl', 'firstname']
+    attributes: ['id', 'email', 'username', 'bio', 'imageUrl', 'firstname', 'roleId']
   })
     .then((user) => {
       if (!user) {

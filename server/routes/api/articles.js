@@ -125,10 +125,12 @@ ArticleRoute.get('/comments/:commentId/dislike',
 
 // Favourite an article routes
 
-ArticleRoute.post('/:id/favourite',
+ArticleRoute.post('/:slug/favourite',
   Auth.verifyUserToken,
+  getArticle,
   ArticleController.addFavourite)
-  .delete('/:id/favourite',
+  .delete('/:slug/favourite',
+    getArticle,
     Auth.verifyUserToken,
     ArticleController.removeFavourite);
 

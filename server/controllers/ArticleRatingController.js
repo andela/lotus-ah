@@ -19,41 +19,29 @@ class ArticleRatingCointroller {
   static addRating(req, res) {
     const userId = req.decoded.id;
     const authenticatedUser = req.authUser;
+    const articele = req.articleObject.dataValues;
     const { author } = req;
-    const { slug } = req.params;
     const { rating } = req.body;
-    Article.findOne({
-      where: {
-        slug
+    const articleId = articele.id;
+
+    return Rating.findOrCreate({
+      where: { userId, articleId },
+      attributes: [
+        'rating'
+      ],
+      defaults: {
+        rating,
       }
-    }).then((article) => {
-      if (article === null) {
-        return res.status(404)
+    }).then((ratings) => {
+      if (ratings) {
+        ArticleRatingCointroller
+          .addRatingToArticle(articleId, rating, authenticatedUser, author);
+        res.status(201)
           .json({
             status: 'Success',
-            message: 'Article not found'
+            message: 'Your rating has been recorded'
           });
       }
-      const articleId = article.dataValues.id;
-      return Rating.findOrCreate({
-        where: { userId, articleId },
-        attributes: [
-          'rating'
-        ],
-        defaults: {
-          rating,
-        }
-      }).then((ratings) => {
-        if (ratings) {
-          ArticleRatingCointroller
-            .addRatingToArticle(articleId, rating, authenticatedUser, author);
-          res.status(201)
-            .json({
-              status: 'Success',
-              message: 'Your rating has been recorded'
-            });
-        }
-      });
     })
       .catch(err => res.status(500)
         .json({

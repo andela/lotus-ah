@@ -2,9 +2,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
-import userSeeder from '../server/db/seeders/userSeeder';
-import articleSeeder from '../server/db/seeders/articleSeeder';
-import reportSeeder from '../server/db/seeders/reportSeeder';
+import userSeeder from '../server/db/seeder/userSeeder';
+import articleSeeder from '../server/db/seeder/articleSeeder';
+import reportSeeder from '../server/db/seeder/reportSeeder';
 
 chai.use(chaiHttp);
 const { expect } = chai;
