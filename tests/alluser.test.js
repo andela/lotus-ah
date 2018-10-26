@@ -8,7 +8,6 @@ import app from '..';
 chai.use(chaiHttp);
 const { expect } = chai;
 let tokenCollect;
-let updatedUserId;
 const tokenFailed = 'bbfehfbeybdhvifnvf.fefwybhebvehvhevbh';
 const userDetails = {
   firstname: 'chisom',
@@ -107,7 +106,6 @@ describe('User Controller', () => {
       .query({ token: tokenCollect })
       .end((error, result) => {
         expect(result.status).to.eql(200);
-        updatedUserId = result.body.updateUser.id;
         expect(result.body).to.be.a('object');
         done();
       });

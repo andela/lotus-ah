@@ -5,8 +5,6 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import errorhandler from 'errorhandler';
-// import swaggerUi from 'swagger-ui-express';
-// import YAML from 'yamljs';
 
 
 // routes
@@ -22,7 +20,6 @@ const isProduction = config.production;
 
 // Create global app object
 const app = express();
-// const swaggerDocument = YAML.load(`${process.cwd()}/swagger.yaml`);
 
 
 app.use(cors());
@@ -50,7 +47,7 @@ app.use(
 if (!isProduction) {
   app.use(errorhandler());
 }
-// app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use(router);
 
 // / catch 404 and forward to error handler

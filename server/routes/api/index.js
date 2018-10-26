@@ -11,7 +11,6 @@ import profiles from './profiles';
 
 
 // Import fixtures
-import createUser from '../../fixtures/user';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
 import followRoute from './follow';
