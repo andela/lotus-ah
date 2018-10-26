@@ -40,7 +40,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('it should not not allow follow if user is not authenticated i.e auth token not present', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${2}/follow`)
+      .post(`/api/v1/profile/${2}/follow`)
       .send(followDetails)
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -53,7 +53,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('it should not allow follow if auth token is not valid', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${2}/follow`)
+      .post(`/api/v1/profile/${2}/follow`)
       .send(followDetails)
       .set({
         'x-access-token': 'bdfbjhsbvdvhjvdsjvsvdv',
@@ -69,7 +69,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('user should not be able to follow themselves', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${1}/follow`)
+      .post(`/api/v1/profile/${1}/follow`)
       .send(followDetails)
       .set({
         'x-access-token': userToken,
@@ -84,7 +84,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('user should not be able to follow invalid user', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${200}/follow`)
+      .post(`/api/v1/profile/${200}/follow`)
       .send(followDetails)
       .set({
         'x-access-token': userToken,
@@ -99,7 +99,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('it should throw internal server error', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${null}/follow`)
+      .post(`/api/v1/profile/${null}/follow`)
       .send(followDetails)
       .set({
         'x-access-token': userToken,
@@ -114,7 +114,7 @@ describe('POST /api/v1/profiles/:userId/follow', () => {
   it('it should return a valid response when presented with all parameters correctly', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/profiles/${2}/follow`)
+      .post(`/api/v1/profile/${2}/follow`)
       .send(followDetails)
       .set({
         'x-access-token': userToken,
@@ -137,7 +137,7 @@ describe('DELETE /api/v1/profiles/:userId/unfollow', () => {
   it('it should not not allow unfollow if user is not authenticated i.e auth token not present', (done) => {
     chai
       .request(server)
-      .delete(`/api/v1/profiles/${2}/unfollow`)
+      .delete(`/api/v1/profile/${2}/unfollow`)
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res.body.status).equals('failed');
@@ -149,7 +149,7 @@ describe('DELETE /api/v1/profiles/:userId/unfollow', () => {
   it('it should not allow unfollow if auth token is not valid', (done) => {
     chai
       .request(server)
-      .delete(`/api/v1/profiles/${2}/unfollow`)
+      .delete(`/api/v1/profile/${2}/unfollow`)
       .set('x-access-token', 'jkbdkhjvsdvbjvjvjsvdvcj')
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -162,7 +162,7 @@ describe('DELETE /api/v1/profiles/:userId/unfollow', () => {
   it('user should not be able to unfollow invalid user', (done) => {
     chai
       .request(server)
-      .delete(`/api/v1/profiles/${200}/follow`)
+      .delete(`/api/v1/profile/${200}/follow`)
       .set({
         'x-access-token': userToken,
       })
@@ -175,7 +175,7 @@ describe('DELETE /api/v1/profiles/:userId/unfollow', () => {
   it('it should throw internal server error', (done) => {
     chai
       .request(server)
-      .delete(`/api/v1/profiles/${null}/unfollow`)
+      .delete(`/api/v1/profile/${null}/unfollow`)
       .set({
         'x-access-token': userToken,
       })
@@ -193,7 +193,7 @@ describe('DELETE /api/v1/profiles/:userId/unfollow', () => {
     }).then(() => {
       chai
         .request(server)
-        .delete(`/api/v1/profiles/${2}/unfollow`)
+        .delete(`/api/v1/profile/${2}/unfollow`)
         .set('x-access-token', userToken)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -214,7 +214,7 @@ describe('GET /api/v1/profiles/followers', () => {
   it('it should not not list all followers if user is not authenticated i.e auth token not present', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/followers')
+      .get('/api/v1/profile/followers')
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res.body.status).equals('failed');
@@ -226,7 +226,7 @@ describe('GET /api/v1/profiles/followers', () => {
   it('it should not list all followers if auth token is not valid', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/followers')
+      .get('/api/v1/profile/followers')
       .set('x-access-token', 'jkbdkhjvsdvbjvjvjsvdvcj')
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -239,7 +239,7 @@ describe('GET /api/v1/profiles/followers', () => {
   it('it should return a valid followers list when presented with all parameters correctly', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/followers')
+      .get('/api/v1/profile/followers')
       .set('x-access-token', userToken)
       .end((err, res) => {
         expect(res).to.have.status(201);
@@ -256,7 +256,7 @@ describe('GET /api/v1/profiles/following', () => {
   it('it should not not list all following if user is not authenticated i.e auth token not present', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/following')
+      .get('/api/v1/profile/following')
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res.body.status).equals('failed');
@@ -268,7 +268,7 @@ describe('GET /api/v1/profiles/following', () => {
   it('it should not list all following if auth token is not valid', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/following')
+      .get('/api/v1/profile/following')
       .set('x-access-token', 'jkbdkhjvsdvbjvjvjsvdvcj')
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -281,7 +281,7 @@ describe('GET /api/v1/profiles/following', () => {
   it('it should return a valid following list when presented with all parameters correctly', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles/following')
+      .get('/api/v1/profile/following')
       .set('x-access-token', userToken)
       .end((err, res) => {
         expect(res).to.have.status(201);

@@ -1,5 +1,3 @@
-
-
 const role = (sequelize, DataTypes) => {
   const Role = sequelize.define('Role', {
     roleName: {

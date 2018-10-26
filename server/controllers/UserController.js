@@ -237,5 +237,34 @@ class UserController {
       }))
       .catch(err => err.message);
   }
+
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @description Fetches a user's profile
+  * @return {object} user
+  * @memberof UserController
+  */
+  static getAllUserProfile(request, response) {
+    User.findAndCountAll({
+      attributes: ['email', 'firstname', 'lastname', 'bio', 'imageUrl', 'username', 'id']
+    })
+      .then((profiles) => {
+        if (profiles) {
+          response.status(200).json({
+            status: 'success',
+            message: 'User exists',
+            profiles: profiles.rows,
+            profilesCount: profiles.count
+          });
+        } else {
+          response.status(400).json({
+            status: 'failed',
+            message: 'User does not exist'
+          });
+        }
+      }).catch(err => err.message);
+  }
 }
 export default UserController;

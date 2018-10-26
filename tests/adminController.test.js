@@ -1,6 +1,7 @@
 // third-party libraries
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 
 // moduler importations
 import app from '..';
@@ -11,7 +12,14 @@ chai.use(chaiHttp);
 const { expect } = chai;
 let tokenCollect;
 let tokenCollectAdmin;
-// const tokenFailed = 'bbfehfbeybdhvifnvf.fefwybhebvehvhevbh';
+
+const fakeToken = jwt.sign({
+  id: 0,
+  email: 'lekeleke@gmail.com',
+}, process.env.SECRET, {
+  expiresIn: '48h',
+});
+
 before(userSeeder.addUserToDb);
 const userDetails = {
   firstname: 'chisom',
@@ -117,6 +125,17 @@ describe('Admin Controller', () => {
         done();
       });
   });
+  it('should return 401 getting all admin by a user that doesnt exist', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/all')
+      .set('x-access-token', fakeToken)
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body.message).to.equal('User does not exist');
+        done();
+      });
+  });
   it('should return 401 getting all admin by a user', (done) => {
     chai.request(app)
       .get('/api/v1/admin/all')
@@ -150,6 +169,17 @@ describe('Admin Controller', () => {
         done();
       });
   });
+  it('should return 401 getting all admin by a user that doesnt exist', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/role/change/admin/2')
+      .set('x-access-token', fakeToken)
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body.message).to.equal('User does not exist');
+        done();
+      });
+  });
   it('should return 200 in changing an admin role to user by admin', (done) => {
     chai.request(app)
       .get('/api/v1/admin/role/change/user/2')
@@ -169,6 +199,17 @@ describe('Admin Controller', () => {
         expect(result.status).to.not.eql(200);
         expect(result.status).to.eql(401);
         expect(result.body).to.be.a('object');
+        done();
+      });
+  });
+  it('should return 401 getting all admin by a user that doesnt exist', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/role/change/user/2')
+      .set('x-access-token', fakeToken)
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body.message).to.equal('User does not exist');
         done();
       });
   });
@@ -213,6 +254,17 @@ describe('Admin Controller', () => {
         expect(result.status).to.not.eql(200);
         expect(result.status).to.eql(400);
         expect(result.body).to.be.a('object');
+        done();
+      });
+  });
+  it('should return 401 getting all admin by a user that doesnt exist', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/suspend/2')
+      .set('x-access-token', fakeToken)
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body.message).to.equal('User does not exist');
         done();
       });
   });
