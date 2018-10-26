@@ -1,6 +1,7 @@
 // third-party libraries
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 
 // created server components
 import server from '..';
@@ -8,6 +9,13 @@ import userSeeder from '../server/db/seeder/userSeeder';
 
 const { expect } = chai;
 chai.use(chaiHttp);
+
+const fakeToken = jwt.sign({
+  id: 0,
+  email: 'lekeleke@gmail.com',
+}, process.env.SECRET, {
+  expiresIn: '48h',
+});
 
 let profileToken;
 let adminToken;
@@ -105,6 +113,9 @@ describe('GET /api/v1/profiles', () => {
   it('should return 400 for getting user profile with non existing id', (done) => {
     chai.request(server)
       .get(`/api/v1/profiles/${100}`)
+      .set({
+        'x-access-token': adminToken,
+      })
       .end((error, result) => {
         expect(result.status).to.not.eql(200);
         expect(result.status).to.eql(400);
@@ -116,6 +127,9 @@ describe('GET /api/v1/profiles', () => {
   it('should return 400 for getting user profile with a nonnumeric id', (done) => {
     chai.request(server)
       .get('/api/v1/profiles/id')
+      .set({
+        'x-access-token': adminToken,
+      })
       .end((error, result) => {
         expect(result.status).to.not.eql(200);
         expect(result.status).to.eql(400);
@@ -131,6 +145,19 @@ describe('GET /api/v1/profiles', () => {
       .end((error, result) => {
         expect(result.status).to.not.eql(200);
         expect(result.status).to.eql(401);
+        expect(result.body).to.be.a('object');
+        done();
+      });
+  });
+  it('should return 400 for updating user profile with wrong user', (done) => {
+    chai.request(server)
+      .put('/api/v1/profiles/1')
+      .set({
+        'x-access-token': fakeToken,
+      })
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
         expect(result.body).to.be.a('object');
         done();
       });

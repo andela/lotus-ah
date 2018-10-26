@@ -144,4 +144,16 @@ describe('User Controller', () => {
         done();
       });
   });
+
+  it('should return 400 for loging in with incorrect password', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send({ email: 'femiade@gmail.com', password: '' })
+      .end((error, result) => {
+        expect(result.status).to.not.eql(200);
+        expect(result.status).to.eql(400);
+        expect(result.body.message).equal('Password required.');
+        done();
+      });
+  });
 });

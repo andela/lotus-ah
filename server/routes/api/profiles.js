@@ -13,6 +13,7 @@ import checkRole from '../../middlewares/checkRole';
 const profileRoute = Router();
 
 profileRoute.get('/:id',
+  AuthController.verifyUserToken,
   UserValidation.checkProfileId,
   UserController.getUserProfile);
 profileRoute.put('/:id',

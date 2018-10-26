@@ -2,19 +2,6 @@ import bcrypt from 'bcrypt';
 import { User } from '../models';
 
 const seeder = {
-  setSignUpData(
-    firstName, username, lastName, email, password, bio
-  ) {
-    return {
-      email,
-      password,
-      firstName,
-      username,
-      lastName,
-      roleId: 1,
-      bio
-    };
-  },
   setLoginData(email, password) {
     return { email, password };
   },
@@ -29,8 +16,7 @@ const seeder = {
           email: 'nondefyde@gmail.com',
           password: userHash,
           roleId: 1,
-        }).then(() => done())
-          .catch(err => done(err));
+        }).then(() => done());
       });
   },
   addSecondUserToDb(done) {
@@ -46,11 +32,12 @@ const seeder = {
         }).then(() => done());
       });
   },
+
   emptyUserTable(done) {
     User.destroy({ truncate: true, cascade: true, restartIdentity: true })
-      .then(() => done())
-      .catch(err => done(err));
+      .then(() => done());
   },
+
   addAdminToDb(done) {
     const password = 'tiatiatia40';
     bcrypt.hash(password, 10)

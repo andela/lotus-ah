@@ -1,5 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 import app from '../index';
 
 import userSeeder from '../server/db/seeder/userSeeder';
@@ -7,6 +8,13 @@ import articleSeeder from '../server/db/seeder/articleSeeder';
 
 chai.use(chaiHttp);
 const { expect } = chai;
+
+const fakeToken = jwt.sign({
+  id: 0,
+  email: 'lekeleke@gmail.com',
+}, process.env.SECRET, {
+  expiresIn: '48h',
+});
 
 before(userSeeder.addUserToDb);
 
@@ -117,6 +125,29 @@ describe('Test article Controller', () => {
         } = res.body;
         expect(res.statusCode).to.equal(400);
         expect(message.body[0]).to.equal('The body field is required.');
+        return done();
+      });
+  });
+
+  it('should return 404, if user doesn\'t exist', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles')
+      .set({
+        'x-access-token': fakeToken,
+      })
+      .send(articleSeeder.setArticleData(
+        'Policemen of this days are not yet here!',
+        `Doing good is right but is generally 
+        not common habit you can find on any one cute`,
+        '',
+        'whtdebjbwwimg.jpg',
+      ))
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.statusCode).to.equal(404);
+        expect(message).to.equal('User does not exist');
         return done();
       });
   });

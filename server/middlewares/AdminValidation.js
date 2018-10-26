@@ -32,12 +32,7 @@ const validation = {
             message: 'User does not exist'
           });
         }
-      })
-      .catch(err => response.status(500).json({
-        status: 'FAILED',
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      });
   },
 
   /**
@@ -64,12 +59,7 @@ const validation = {
             message: 'User does not exist'
           });
         }
-      })
-      .catch(err => response.status(500).json({
-        status: 'FAILED',
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+      });
   },
 
 
