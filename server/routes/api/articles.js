@@ -8,6 +8,7 @@ import CommentController from '../../controllers/CommentController';
 import HighlightTextController from '../../controllers/HighlightTextController';
 import LikesController from '../../controllers/LikesController';
 import ReportController from '../../controllers/ReportController';
+import ReadingStatController from '../../controllers/ReadingStatController';
 
 // middelwares
 import CommentValidation from '../../middlewares/CommentValidation';
@@ -101,7 +102,13 @@ ArticleRoute.put('/:slug/report/resolve',
   ReportController.resolveReport);
 
 ArticleRoute.get('/:slug',
-  ArticleController.getSingleArticle);
+  Auth.passiveTokenValidation,
+  ArticleController.getSingleArticle,
+  ReadingStatController.recordReadingStat);
+
+ArticleRoute.get('/user/reading/statistics',
+  Auth.verifyUserToken,
+  ReadingStatController.getReadingStat);
 
 // // Like or this Dislike a comment
 

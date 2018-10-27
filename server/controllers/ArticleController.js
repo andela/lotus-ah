@@ -294,11 +294,13 @@ class ArticleController {
    * @description Fetch a single Article from the Article's list
    * @param {object} req http request object
    * @param {object} res http response object
+   * @param  {function} next response from the server
    * @returns {object} json
    * @memberof ArticleController
    */
-  static getSingleArticle(req, res) {
+  static getSingleArticle(req, res, next) {
     const currentSlug = req.params.slug;
+    const userId = req.decoded.id;
     if (!currentSlug) {
       return res.status(400).json({
         status: 'FAILED',
@@ -341,6 +343,11 @@ class ArticleController {
     })
       .then((articles) => {
         if (articles) {
+          const articleId = articles.id;
+          if (userId !== 0) {
+            res.stat = { userId, articleId };
+            next();
+          }
           return res.status(200)
             .json({
               status: 'SUCCESS',
@@ -390,6 +397,7 @@ class ArticleController {
       }],
       attributes: [
         'id',
+        'slug',
         'userId',
         'title',
         'body',

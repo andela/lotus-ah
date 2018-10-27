@@ -52,6 +52,22 @@ const seeder = {
         }).then(() => done());
       });
   },
+  addThirdUserToDb(done) {
+    const password = 'lotus1234';
+    bcrypt.hash(password, 10)
+      .then((userHash) => {
+        User.create({
+          firstname: 'Lotus',
+          lastname: 'lotusah',
+          username: 'loyus',
+          email: 'lotus@gmail.com',
+          password: userHash,
+          roleId: 1,
+        }).then(() => done())
+          .catch(err => done(err));
+      })
+      .catch(err => err);
+  }
 };
 
 export default seeder;

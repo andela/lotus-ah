@@ -44,6 +44,29 @@ const auth = {
   * @description Verifies user token
   * @return {object} object
   */
+  passiveTokenValidation(request, response, next) {
+    const token = request.query.token || request.body.token || request.headers['x-access-token'];
+    let decoded = {};
+    if (!token) {
+      decoded.id = 0;
+    } else if (token) {
+      decoded = auth.verifyToken(token);
+      if (decoded.error) {
+        decoded.id = 0;
+      }
+    }
+    request.decoded = decoded;
+    next();
+  },
+
+  /**
+  * @static
+  * @param {object} request
+  * @param {object} response
+  * @param {function} next
+  * @description Verifies user token
+  * @return {object} object
+  */
   verifyUserToken(request, response, next) {
     const token = request.query.token || request.body.token || request.headers['x-access-token'];
     if (!token) {

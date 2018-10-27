@@ -44,7 +44,7 @@ class TagController {
           return response.status(404)
             .json({
               status: 'failed',
-              message: 'Tag name provided does not exist'
+              message: 'No tag available'
             });
         }
         response.status(200)
