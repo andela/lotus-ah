@@ -43,8 +43,8 @@ before((done) => {
   chai.request(server)
     .post('/api/v1/login')
     .send(userSeeder.setLoginData(
-      'femiadefemi@gmail.com',
-      'tiatiatia40',
+      'nondefyde@gmail.com',
+      'chigodwin1',
     )).end((err, res) => {
       expect(res.statusCode).to.equal(200);
       if (err) return done(err);

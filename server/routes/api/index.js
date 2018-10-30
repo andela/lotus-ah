@@ -11,6 +11,7 @@ import profiles from './profiles';
 
 
 // Import fixtures
+import reply from './reply';
 import articles from './articles';
 import socialAuth from './socialAuthRoutes';
 import followRoute from './follow';
@@ -25,6 +26,7 @@ router.use('/articles', articles);
 router.use('/', tag);
 router.use('/', search);
 router.use('/', notification);
+router.use('/', reply);
 
 
 router.use('/', users);
