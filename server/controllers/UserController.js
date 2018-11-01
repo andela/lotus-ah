@@ -36,7 +36,7 @@ class UserController {
         if (!created) {
           const { isActivated } = user.dataValues;
           if (isActivated === false) {
-            const result = EmailController.sendVerificationEmail(user.dataValues);
+            const result = EmailController.sendVerificationEmail(user.dataValues, request);
             return response.status(200).json({
               status: 'Success',
               message: 'A verification email has been resent to this email',
@@ -48,7 +48,7 @@ class UserController {
             message: 'Email exists'
           });
         }
-        const result = EmailController.sendVerificationEmail(user.dataValues);
+        const result = EmailController.sendVerificationEmail(user.dataValues, request);
         return response.status(201).json({
           message: 'A verification email has been sent to this email ',
           user,
@@ -68,13 +68,23 @@ class UserController {
   static activateUser(request, response) {
     User.update(
       { isActivated: true },
-      { where: { id: request.decoded.id } }
+      {
+        where: { id: request.decoded.id },
+        returning: true,
+        plain: true
+      }
     )
-      .then(user => response.status(200).json({
-        status: 'success',
-        message: 'User Activated Successfully',
-        user
-      }))
+      .then((user) => {
+        const activatedUser = {
+          id: user[1].dataValues.id,
+          email: user[1].dataValues.email,
+        };
+        return response.status(200).json({
+          status: 'success',
+          message: 'User Activated Successfully',
+          user: activatedUser
+        });
+      })
       .catch(err => err.message);
   }
 
@@ -152,12 +162,19 @@ class UserController {
         const check = bcrypt.compareSync(password, user.dataValues.password);
         if (check) {
           const userToken = auth.authenticate(user.dataValues);
-          delete user.password;
+          const loggedInUser = {
+            id: user.id,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            imageUrl: user.imageUrl,
+            bio: user.bio,
+          };
           response.status(200).json({
             status: 'success',
             message: 'Login was Successfull',
             token: userToken,
-            user
+            user: loggedInUser
           });
         } else {
           response.status(401).json({

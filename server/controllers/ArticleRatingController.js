@@ -23,7 +23,6 @@ class ArticleRatingCointroller {
     const { author } = req;
     const { rating } = req.body;
     const articleId = articele.id;
-
     return Rating.findOrCreate({
       where: { userId, articleId },
       attributes: [
@@ -32,16 +31,14 @@ class ArticleRatingCointroller {
       defaults: {
         rating,
       }
-    }).then((ratings) => {
-      if (ratings) {
-        ArticleRatingCointroller
-          .addRatingToArticle(articleId, rating, authenticatedUser, author);
-        res.status(201)
-          .json({
-            status: 'Success',
-            message: 'Your rating has been recorded'
-          });
-      }
+    }).spread(() => {
+      Rating.update({ rating: req.body.rating }, {
+        where: { userId, articleId },
+        attributes: [
+          'rating'
+        ],
+      }).then(() => ArticleRatingCointroller
+        .addRatingToArticle(articleId, req.body.rating, authenticatedUser, author, res));
     })
       .catch(err => res.status(500)
         .json({
@@ -58,10 +55,12 @@ class ArticleRatingCointroller {
  * @param {intger} rating
  * @param {object} authenticatedUser
  * @param {object} author
+ * @param {object} res
  * @returns {object} object
  * @member ArticleRatingCointroller
  */
-  static addRatingToArticle(articleId, rating, authenticatedUser, author) {
+  static addRatingToArticle(articleId, rating, authenticatedUser, author, res) {
+    let average = null;
     return Rating.findAll({
       where: { articleId },
       attributes: [
@@ -70,20 +69,24 @@ class ArticleRatingCointroller {
       ],
     }).then((result) => {
       const articleRating = parseInt(result[0].dataValues.rating, 10);
-      Article.update({
+      average = articleRating;
+      return Article.update({
         rating: articleRating,
       },
       {
-        where: { id: articleId }
+        where: { id: articleId },
+        returning: true,
+        plain: true
       });
     })
-      .then((articele) => {
+      .then((result) => {
+        const articele = result[1].dataValues;
         const notify = {
           type: 'like',
           articleId,
           rating,
           message: `new rating has been added to your article ${articele.title}`,
-          user: authenticatedUser,
+          authenticatedUser,
           messageForAuthor: `Hey ${auth.firstname}, ${authenticatedUser.firstname} rated your article
           ${articele.title}
           `,
@@ -95,6 +98,12 @@ class ArticleRatingCointroller {
             notify,
           }
         );
+        return res.status(201)
+          .json({
+            status: 'Success',
+            average,
+            message: 'Your rating has been recorded'
+          });
       })
       .catch(error => error);
   }

@@ -42,7 +42,8 @@ class CommentController {
           author,
           authenticatedUser: user,
           articleUrl: `${process.env.BASE_URL}/api/v1/articles/${article.slug}`,
-          message: `${user.firstname} commented on your article`
+          message: `${user.firstname},${user.id},comment on your artilce '${commentBody}',${article.title},${article.slug}`,
+          emailMessage: `${user.firstname} commented on your article`
         };
         NotificationController.notifyFollowers(
           {

@@ -65,19 +65,35 @@ describe('Test NotificationController', () => {
       });
   });
 
-  it('should mark user notification as read', (done) => {
+  it('should mark a single user notification as read', (done) => {
     const id = 1;
     chai.request(app)
-      .get(`/api/v1/me/notifications/${id}`)
+      .put(`/api/v1/me/notifications/${id}`)
       .set({
         'x-access-token': userToken,
       })
       .end((err, res) => {
         const {
-          notifications,
+          message,
         } = res.body;
-        expect(res.status).to.equal(200);
-        expect(notifications).to.equal(null);
+        expect(res.status).to.equal(201);
+        expect(message).to.equal('Notification marked as read');
+        done();
+      });
+  });
+
+  it('should mark all user notification as read', (done) => {
+    chai.request(app)
+      .put('/api/v1/me/notifications')
+      .set({
+        'x-access-token': userToken,
+      })
+      .end((err, res) => {
+        const {
+          message,
+        } = res.body;
+        expect(res.status).to.equal(201);
+        expect(message).to.equal('All Notification marked as read');
         done();
       });
   });

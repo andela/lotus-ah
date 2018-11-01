@@ -1,6 +1,6 @@
 // THIRD-PARTY LIBRARY
 import { Router } from 'express';
-import multerUploads from '../../config/multer/multerConfig';
+import uploads from '../../helpers/imageUploader';
 
 // modules import
 import ArticleController from '../../controllers/ArticleController';
@@ -29,7 +29,7 @@ const ArticleRoute = Router();
 ArticleRoute.post('/',
   Auth.verifyUserToken,
   getUser,
-  multerUploads,
+  uploads,
   articleValidation(schemas.articleSchema),
   ArticleController.createArticle);
 

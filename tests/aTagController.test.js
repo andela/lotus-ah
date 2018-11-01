@@ -42,7 +42,6 @@ describe('Testing Tag Controller', () => {
         'x-access-token': userToken,
       })
       .end((err, res) => {
-        console.log('res', res.body);
         expect(res.statusCode).to.equal(404);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.equals('No tag available');

@@ -18,7 +18,7 @@ authRouter.put(
 );
 
 authRouter.get(
-  '/auth/forgot_password',
+  '/auth/forgot_password/verifyEmail',
   validator.verifyRestPasswordToken,
   AuthController.verifyUserEmail
 );

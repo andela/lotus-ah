@@ -30,6 +30,7 @@ const getArticle = (request, response, next) => {
           });
       }
       request.articleObject = article;
+      request.author = article.users.dataValues;
       next();
     })
     .catch(next);

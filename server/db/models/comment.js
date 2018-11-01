@@ -49,6 +49,10 @@ const comment = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'reaction'
     });
+    Comment.hasMany(models.Reply, {
+      as: 'replies',
+      foreignKey: 'commentId',
+    });
   };
   return Comment;
 };

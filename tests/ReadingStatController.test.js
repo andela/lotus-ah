@@ -12,7 +12,6 @@ before(userSeeder.addThirdUserToDb);
 
 let userToken2;
 let userToken;
-let articleId;
 let articleSlug;
 
 before((done) => {
@@ -60,10 +59,7 @@ describe('User\'s reading statistics', () => {
         const {
           message,
         } = res.body;
-        articleId = res.body.createdArticle.id;
         articleSlug = res.body.createdArticle.slug;
-        console.log('articleId', articleId);
-        console.log('articleSlug', articleSlug);
         expect(res.statusCode).to.equal(201);
         expect(message).to.equal('Published article successfully');
         return done();

@@ -8,7 +8,9 @@ import {
   FavoriteArticle,
   Comment,
   Tag,
-  Reaction
+  Reaction,
+  User,
+  Reply
 } from '../db/models';
 import timeToRead from '../helpers/timeToRead';
 import NotificationController from './NotificationController';
@@ -45,7 +47,7 @@ class ArticleController {
     const userId = req.decoded.id;
     let imageUrl = null;
     if (req.file) {
-      imageUrl = req.file.path;
+      imageUrl = req.file.secure_url;
     }
     const articleSlug = ArticleController.makeSlug(title);
     const authenticatedUser = req.authUser;
@@ -80,14 +82,16 @@ class ArticleController {
             }
           }]
         })
-          .then((createdArticle) => {
+          .then((create) => {
             const notify = {
               type: 'publish',
-              article: createdArticle.title,
+              article: create.title,
+              slug: create.slug,
               author: authenticatedUser,
               authenticatedUser,
-              articleUrl: `${process.env.BASE_URL}/api/v1/articles/${createdArticle.slug}`,
-              message: `${authenticatedUser.firstname} published new artilce`
+              articleUrl: `${process.env.BASE_URL}/api/v1/articles/${create.slug}`,
+              message: `${authenticatedUser.firstname},${authenticatedUser.id},published a new artilce,${create.title},${create.slug}`,
+              emailMessage: `${authenticatedUser.firstname} published a new artilce`
             };
             NotificationController.notifyFollowers(
               {
@@ -98,7 +102,7 @@ class ArticleController {
             return res.status(201).json({
               status: 'SUCCESS',
               message: 'Published article successfully',
-              createdArticle
+              createdArticle: create
             });
           });
       })
@@ -263,6 +267,7 @@ class ArticleController {
         'title',
         'body',
         'description',
+        'imageUrl',
         'rating',
         'createdAt',
         'updatedAt'
@@ -314,7 +319,25 @@ class ArticleController {
       include: [{
         model: Comment,
         as: 'comments',
-        attributes: ['id', 'commentBody', 'userId', 'createdAt']
+        attributes: ['id', 'commentBody', 'userId', 'createdAt'],
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: [
+              'firstname',
+              'username'
+            ]
+          },
+          {
+            model: Reply,
+            as: 'replies',
+            attributes: [
+              'id'
+            ]
+
+          }
+        ]
       },
       {
         model: Tag,
@@ -325,6 +348,15 @@ class ArticleController {
         }
       },
       {
+        model: User,
+        as: 'users',
+        attributes: [
+          'firstname',
+          'lastname',
+          'username'
+        ]
+      },
+      {
         model: Reaction,
         as: 'reactions',
         attributes: ['id', 'likes', 'dislike']
@@ -333,11 +365,13 @@ class ArticleController {
         'id',
         'userId',
         'title',
+        'imageUrl',
         'body',
         'slug',
         'description',
         'rating',
         'createdAt',
+        'isReported',
         'updatedAt'
       ]
     })
