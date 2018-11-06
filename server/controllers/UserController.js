@@ -247,23 +247,35 @@ class UserController {
   * @memberof UserController
   */
   static getAllUserProfile(request, response) {
+    const limit = 20;
+    let offset = 0;
     User.findAndCountAll({
       attributes: ['email', 'firstname', 'lastname', 'bio', 'imageUrl', 'username', 'id']
     })
-      .then((profiles) => {
-        if (profiles) {
-          response.status(200).json({
-            status: 'success',
-            message: 'User exists',
-            profiles: profiles.rows,
-            profilesCount: profiles.count
-          });
-        } else {
-          response.status(400).json({
-            status: 'failed',
-            message: 'User does not exist'
-          });
-        }
+      .then((data) => {
+        const { page } = request.params;
+        offset = limit * (page - 1);
+        const pages = Math.ceil(data.count / limit);
+        User.findAll({
+          attributes: ['email', 'firstname', 'lastname', 'bio', 'imageUrl', 'username', 'id'],
+          limit,
+          offset,
+        }).then((profiles) => {
+          if (profiles) {
+            response.status(200).json({
+              status: 'success',
+              profiles,
+              profilesCount: data.count,
+              page,
+              pages
+            });
+          } else {
+            response.status(400).json({
+              status: 'failed',
+              message: 'User does not exist'
+            });
+          }
+        });
       }).catch(err => err.message);
   }
 }

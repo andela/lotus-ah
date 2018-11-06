@@ -31,9 +31,9 @@ ArticleRoute.post('/',
   getUser,
   multerUploads,
   articleValidation(schemas.articleSchema),
-  ArticleController.createArticle)
+  ArticleController.createArticle);
 
-  .get('/', ArticleController.getAllArticles);
+ArticleRoute.get('/all/:page', ArticleController.getAllArticles);
 
 ArticleRoute.get('/user',
   Auth.verifyUserToken,

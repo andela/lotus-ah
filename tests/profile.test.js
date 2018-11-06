@@ -57,7 +57,7 @@ describe('GET /api/v1/profiles', () => {
   it('should not list users if user is not authenticated', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles')
+      .get(`/api/v1/profiles/all/${1}`)
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res.body.status).equals('failed');
@@ -69,7 +69,7 @@ describe('GET /api/v1/profiles', () => {
   it('it should not list users if auth token is not valid', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles')
+      .get(`/api/v1/profiles/all/${1}`)
       .set({
         'x-access-token': 'bdfbjhsbvdvhjvdsjvsvdv',
       })
@@ -84,7 +84,7 @@ describe('GET /api/v1/profiles', () => {
   it('it should not list users if user is not an admin', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles')
+      .get(`/api/v1/profiles/all/${1}`)
       .set({
         'x-access-token': profileToken,
       })
@@ -98,7 +98,7 @@ describe('GET /api/v1/profiles', () => {
   it('it should return a list of users', (done) => {
     chai
       .request(server)
-      .get('/api/v1/profiles')
+      .get(`/api/v1/profiles/all/${1}`)
       .set({
         'x-access-token': adminToken,
       })

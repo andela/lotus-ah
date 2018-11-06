@@ -376,53 +376,66 @@ class ArticleController {
    * @memberof ArticleController
    */
   static getAllArticles(req, res) {
-    Article.findAndCountAll({
-      include: [{
-        model: Comment,
-        as: 'comments',
-        attributes: ['id', 'commentBody', 'userId', 'createdAt']
-      },
-      {
-        model: Tag,
-        as: 'Tags',
-        attributes: ['id', 'name'],
-        through: {
-          attributes: [],
-        }
-      },
-      {
-        model: Reaction,
-        as: 'reactions',
-        attributes: ['id', 'likes', 'dislike']
-      }],
-      attributes: [
-        'id',
-        'slug',
-        'userId',
-        'title',
-        'body',
-        'description',
-        'imageUrl',
-        'rating',
-        'createdAt',
-        'updatedAt'
-      ],
-    })
-      .then((articles) => {
-        if (articles) {
-          return res.status(200)
-            .json({
-              status: 'SUCCESS',
-              message: 'Fetched all article',
-              Articles: articles
-            });
-        }
-      })
-      .catch(err => res.status(500).json({
-        status: 'FAILED',
-        message: 'Error processing request, please try again',
-        Error: err.toString()
-      }));
+    const limit = 15;
+    let offset = 0;
+    Article.findAndCountAll()
+      .then((data) => {
+        const { page } = req.params;
+        offset = limit * (page - 1);
+        const pages = Math.ceil(data.count / limit);
+        Article.findAll({
+          include: [{
+            model: Comment,
+            as: 'comments',
+            attributes: ['id', 'commentBody', 'userId', 'createdAt']
+          },
+          {
+            model: Tag,
+            as: 'Tags',
+            attributes: ['id', 'name'],
+            through: {
+              attributes: [],
+            }
+          },
+          {
+            model: Reaction,
+            as: 'reactions',
+            attributes: ['id', 'likes', 'dislike']
+          }],
+          attributes: [
+            'id',
+            'slug',
+            'userId',
+            'title',
+            'body',
+            'description',
+            'imageUrl',
+            'rating',
+            'createdAt',
+            'updatedAt'
+          ],
+          limit,
+          offset
+        })
+          .then((articles) => {
+            if (articles) {
+              return res.status(200)
+                .json({
+                  status: 'SUCCESS',
+                  message: 'Fetched all article',
+                  articles,
+                  articlesCount: data.count,
+                  page,
+                  pages
+                });
+            }
+          })
+          .catch(err => res.status(500).json({
+            status: 'FAILED',
+            message: 'Error processing request, please try again',
+            Error: err.toString()
+          }));
+      }).catch(err => err.message);
   }
 
   /**

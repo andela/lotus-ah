@@ -24,7 +24,7 @@ const setupPassport = () => {
   const facebookStrategy = process.env.NODE_ENV === 'test' ? facebookMockStrategy : new FacebookStrategy(
     {
     // options for facebook strategy
-      callbackURL: '/api/v1/auth/facebook/redirect',
+      callbackURL: `${process.env.BACK_URL}/api/v1/auth/facebook/redirect`,
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       profileFields: ['id', 'name', 'displayName', 'photos', 'email']
@@ -34,7 +34,7 @@ const setupPassport = () => {
     {
       consumerKey: process.env.TWITTER_CONSUMER_KEY,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-      callbackURL: '/api/v1/auth/twitter/redirect',
+      callbackURL: `${process.env.BACK_URL}/api/v1/auth/twitter/redirect`,
       includeEmail: true,
       includeName: true
     }, strategyCallback
@@ -42,7 +42,7 @@ const setupPassport = () => {
   const googleStrategy = process.env.NODE_ENV === 'test' ? googleMockStrategy : new GoogleStrategy(
     {
     // options for google strategy
-      callbackURL: '/api/v1/auth/google/redirect',
+      callbackURL: `${process.env.BACK_URL}/api/v1/auth/google/redirect`,
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
     }, strategyCallback
