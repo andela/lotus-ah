@@ -199,8 +199,9 @@ describe('Test article Controller', () => {
   });
 
   it('should list all users articles', (done) => {
+    const page = 1;
     chai.request(app)
-      .get('/api/v1/articles')
+      .get(`/api/v1/articles/all/${page}`)
       .set({
         'x-access-token': userToken,
       })

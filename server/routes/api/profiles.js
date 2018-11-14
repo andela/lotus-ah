@@ -23,7 +23,7 @@ profileRoute.put('/:id',
   upload,
   UserValidation.checkUserDetails,
   UserController.updateUser);
-profileRoute.get('/',
+profileRoute.get('/all/:page',
   AuthController.verifyUserToken,
   checkRole,
   UserController.getAllUserProfile);

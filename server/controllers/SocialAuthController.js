@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { User } from '../db/models';
 import TokenVerification from '../middlewares/TokenVerification';
 
@@ -30,6 +31,8 @@ function createOrFindUser(request, response) {
         user: {
           email: user.email,
           username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
           bio: user.bio,
           image: user.imageUrl
         }
@@ -39,12 +42,23 @@ function createOrFindUser(request, response) {
         const token = TokenVerification.authenticate(user);
         returnedUser.user.token = token;
         returnedUser.message = 'User created successfully';
-        response.status(201).send(returnedUser);
+        const userToken = jwt.sign({
+          returnedUser
+        }, process.env.SECRET, {
+          expiresIn: '48h',
+        });
+        response.status(200).redirect(`${process.env.FRONT_URL}?token=${userToken}`);
       } else {
         const token = TokenVerification.authenticate(user);
         returnedUser.user.token = token;
         returnedUser.message = 'User with email attached to this account already exist';
-        response.status(200).send(returnedUser);
+
+        const userToken = jwt.sign({
+          returnedUser
+        }, process.env.SECRET, {
+          expiresIn: '48h',
+        });
+        response.status(200).redirect(`${process.env.FRONT_URL}?token=${userToken}`);
       }
     });
 }
