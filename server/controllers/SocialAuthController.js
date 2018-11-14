@@ -47,7 +47,7 @@ function createOrFindUser(request, response) {
         }, process.env.SECRET, {
           expiresIn: '48h',
         });
-        response.status(201).redirect(`${process.env.FRONT_URL}?token=${userToken}`);
+        response.status(200).redirect(`${process.env.FRONT_URL}?token=${userToken}`);
       } else {
         const token = TokenVerification.authenticate(user);
         returnedUser.user.token = token;
