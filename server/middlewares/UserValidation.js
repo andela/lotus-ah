@@ -91,7 +91,7 @@ const validation = {
     const values = request.body;
     const { password } = values;
     const required = ['firstname',
-      'lastname', 'username', 'password', 'bio'];
+      'lastname', 'username', 'password'];
     let pass = true;
     const errors = {};
     for (let i = 0; i < required.length; i += 1) {
@@ -134,7 +134,7 @@ const validation = {
   checkUserDetails(request, response, next) {
     const values = request.body;
     const required = ['firstname',
-      'lastname', 'bio'];
+      'lastname'];
     let pass = true;
     const errors = {};
     for (let i = 0; i < required.length; i += 1) {

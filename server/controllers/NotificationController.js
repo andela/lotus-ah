@@ -109,16 +109,17 @@ class NotificationController {
         const authorFollowers = followers.rows
           .filter(result => result.User !== null)
           .map(userRow => ({
-            id: userRow.dataValues.id,
+            id: userRow.dataValues.followerId,
             firstname: userRow.User.dataValues.firstname,
             email: userRow.User.dataValues.email,
           }));
+        console.log(authorFollowers);
         if (authorFollowers.length === 0) {
           return;
         }
         const data = notify;
         data.templateId = 'd-4823986320904dc3b623fec5f9c56829';
-        this.createBulkNotification(authorFollowers, `${data.message}`);
+        this.createBulkNotification(authorFollowers, `${data.message}`, notify.type);
         this.sendEmailNotification(authorFollowers, data);
       });
       return true;
@@ -183,10 +184,13 @@ class NotificationController {
    */
   static notifyUser(notify, userId) {
     const data = notify;
+    console.log('yes');
     Notification.create({
       userId,
+      type: notify.type,
       message: notify.message,
     }).then(() => {
+      console.log('djdjjdjd');
       const emailData = this.prepareSingleUserEmail(
         notify.user, data
       );
@@ -198,12 +202,14 @@ class NotificationController {
    * @description create bulk for many users in the database
    * @param {object} users
    * @param {object} message
+   * @param {string} type
    * @returns {boolean} true
    */
-  static createBulkNotification(users, message) {
+  static createBulkNotification(users, message, type) {
     const notification = users.map(user => ({
       userId: user.id,
       message,
+      type
     }));
     return Notification.bulkCreate(notification, { returning: true })
       .then(() => true)
@@ -220,8 +226,7 @@ class NotificationController {
     const userId = req.decoded.id;
     Notification.findAndCountAll({
       where: {
-        userId,
-        isRead: false,
+        userId
       }
     })
       .then((notification) => {
@@ -298,6 +303,29 @@ class NotificationController {
         .json({
           status: 'Succes',
           message: 'Notification marked as read',
+        }))
+      .catch(error => error);
+  }
+
+  /**
+   * @description mark all user notification as read
+   * @param {object} req
+   * @param {integer} res
+   * @returns {object} response
+   */
+  static markAllAsRead(req, res) {
+    const userId = req.authUser.id;
+    Notification.update({
+      isRead: true,
+    }, {
+      where: {
+        userId
+      }
+    })
+      .then(() => res.status(201)
+        .json({
+          status: 'Succes',
+          message: 'All Notification marked as read',
         }))
       .catch(error => error);
   }

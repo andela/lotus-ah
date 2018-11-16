@@ -39,16 +39,18 @@ class AuthController {
         const token = jwt.sign({ userId: result.id }, process.env.SECRET, {
           expiresIn: '1hr',
         });
-        const path = `/api/v1/auth/reset_password?token=${token}`;
+        const path = `/api/v1/auth/forgot_password/verifyEmail?token=${token}`;
         // Send mail
-        const resetPasswordLink = `${process.env.BASE_URL}${path}`;
+        const serverResetLink = `${process.env.BASE_URL}${path}`;
+        const clientResetLink = request.query.callBack;
+        const resetLink = clientResetLink ? `${clientResetLink}?token=${token}` : serverResetLink;
         const emailObject = {
           to: result.email,
           from: process.env.EMAIL_HOST,
           templateId: 'd-2ecbb1b8b5b64df280ab596df9d0931c',
           message: `Hi ${result.firstname}`,
           dynamic_template_data: {
-            resetPasswordLink,
+            resetPasswordLink: resetLink
           }
         };
         EmailController.sendMail(emailObject);
@@ -57,7 +59,7 @@ class AuthController {
             status: 'success',
             message: 'Password reset details has been sent to your mail',
             token,
-            link: path,
+            link: resetLink,
           });
       })
       .catch(error => response.status(500)

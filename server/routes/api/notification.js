@@ -30,6 +30,13 @@ notificationRouter.put(
 );
 
 notificationRouter.put(
+  '/me/notifications',
+  auth.verifyUserToken,
+  fetchUser,
+  NotificationController.markAllAsRead,
+);
+
+notificationRouter.put(
   '/me/settings/notifications',
   auth.verifyUserToken,
   fetchUser,

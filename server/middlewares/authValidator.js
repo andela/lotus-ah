@@ -16,7 +16,7 @@ const validator = {
  * @returns {object} object
 */
   verifyRestPasswordToken: (request, response, next) => {
-    const { token } = request.query;
+    const token = request.query.token || request.headers['x-access-token'];
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
       if (err) {
         response.status(401)

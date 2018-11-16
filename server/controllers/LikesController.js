@@ -65,6 +65,7 @@ class LikesController {
         });
       }
       const author = foundArticle.users.dataValues;
+      const article = foundArticle.dataValues;
       return Reaction.findOrCreate({
         where: {
           userId,
@@ -87,11 +88,12 @@ class LikesController {
           }
           const notify = {
             type: 'like',
-            article: foundArticle.dataValues.title,
+            article,
             authenticatedUser: user,
             author,
-            articleUrl: `${process.env.BASE_URL}/api/v1/articles/${foundArticle.dataValues.slug}`,
-            message: `${user.firstname} liked your article`
+            articleUrl: `${process.env.BASE_URL}/api/v1/articles/${article.slug}`,
+            message: `${user.firstname},${user.id},like your artilce,${article.title},${article.slug}`,
+            emailMessage: `${user.firstname} liked your article`
           };
           NotificationController.notifyFollowers(
             {
@@ -211,7 +213,7 @@ class LikesController {
   */
   static likeComment(req, res) {
     const comment = req.commentObject;
-    const authenticatedUser = req.authUser;
+    const { authUser } = req;
     const commentOwner = comment.user.dataValues;
     const userId = req.decoded.id;
     const commentId = comment.id;
@@ -243,10 +245,11 @@ class LikesController {
           user: commentOwner,
           email: commentOwner.email,
           templateId: 'd-c2a36f6d193a47d8bb479472b41bfceb',
-          message: `Hey ${authenticatedUser.firstname} liked your comment on ${comment.commentBody}`,
+          message: `${authUser.firstname},${authUser.id},published a new artilce,${authUser.title},${authUser.slug}`,
+          emailMessage: `Hey ${authUser.firstname} liked your comment on ${comment.commentBody}`,
         };
         // I shouldn't receive notification when I like my own comment
-        if (commentOwner.id !== authenticatedUser.id) {
+        if (commentOwner.id !== authUser.id) {
           NotificationController.notifyUser(notify, commentOwner.id);
         }
         return res.status(201).json({

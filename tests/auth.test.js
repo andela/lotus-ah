@@ -40,7 +40,7 @@ describe('Testing forgot password route', () => {
 
   it('Should send mail and return a token', (done) => {
     chai.request(app)
-      .get(`/api/v1/auth/forgot_password?token=${responseObject.token}`)
+      .get(`/api/v1/auth/forgot_password/verifyEmail?token=${responseObject.token}`)
       .end((error, response) => {
         expect(response.body).to.be.an('object');
         responseObject.token = response.body.token;
@@ -67,7 +67,7 @@ describe('Testing change password route', () => {
   });
   it('Should not change password when password is undefined', (done) => {
     chai.request(app)
-      .put(`${responseObject.link}`)
+      .put(`/api/v1/auth/reset_password?token=${responseObject.token}`)
       .send({ confirmPassword: 'test12675' })
       .end((error, response) => {
         expect(response.body).to.be.an('object');
@@ -79,7 +79,7 @@ describe('Testing change password route', () => {
 
   it('Should not change password when password length is less than 6', (done) => {
     chai.request(app)
-      .put(`${responseObject.link}`)
+      .put(`/api/v1/auth/reset_password?token=${responseObject.token}`)
       .send({ password: 'test', confirmPassword: 'test12345' })
       .end((error, response) => {
         expect(response.body).to.be.an('object');
@@ -91,7 +91,7 @@ describe('Testing change password route', () => {
 
   it("Should not change password when password doesn't match", (done) => {
     chai.request(app)
-      .put(`${responseObject.link}`)
+      .put(`/api/v1/auth/reset_password?token=${responseObject.token}`)
       .send({ password: 'test12345', confirmPassword: 'test12675' })
       .end((error, response) => {
         expect(response.body).to.be.an('object');
@@ -102,7 +102,7 @@ describe('Testing change password route', () => {
 
   it('Should change password', (done) => {
     chai.request(app)
-      .put(`${responseObject.link}`)
+      .put(`/api/v1/auth/reset_password?token=${responseObject.token}`)
       .send({ password: 'test12345', confirmPassword: 'test12345' })
       .end((error, response) => {
         expect(response.body).to.be.an('object');

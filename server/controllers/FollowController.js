@@ -44,8 +44,8 @@ class FollowController {
               following: user,
               followerImage: `${baseImgae}/2014/06/create-a-gravatar-beard-768x795.png`,
               templateId: 'd-b0be4323d9fa4fd9a3bd2d88fb671755',
-              message: `Hey ${user.firstname}, ${authenticatedUser.firstname}
-              started following you,
+              message: `${authenticatedUser.firstname},${authenticatedUser.id},started following you`,
+              emailMessage: `${user.firstname},${authenticatedUser.firstname},started following you,
               `
             };
             NotificationController.notifyUser(data, user.id);
