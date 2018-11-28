@@ -79,7 +79,7 @@ class SearchController {
           return response.status(404)
             .json({
               status: 'failed',
-              message: 'We couldn’t find any article'
+              message: 'We could not find any article'
             });
         }
         response.status(200)
@@ -205,7 +205,7 @@ class SearchController {
           return response.status(404)
             .json({
               status: 'failed',
-              message: 'We couldn’t find any article'
+              message: 'We could not find any article'
             });
         }
         response.status(200)
