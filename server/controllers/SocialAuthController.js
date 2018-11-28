@@ -33,6 +33,7 @@ function createOrFindUser(request, response) {
           username: user.username,
           firstname: user.firstname,
           lastname: user.lastname,
+          id: user.id,
           bio: user.bio,
           image: user.imageUrl
         }
