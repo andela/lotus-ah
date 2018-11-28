@@ -50,7 +50,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('All Author available');
+        expect(res.body.message).to.equals('All articles available');
         done();
       });
   });
@@ -60,7 +60,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('All Author available');
+        expect(res.body.message).to.equals('All articles available');
         done();
       });
   });
@@ -70,7 +70,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('All Author available');
+        expect(res.body.message).to.equals('All articles available');
         done();
       });
   });
@@ -80,7 +80,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(404);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('We could not find the author');
+        expect(res.body.message).to.equals('We could not find any article');
         done();
       });
   });
@@ -90,7 +90,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('Tags successfully obtained');
+        expect(res.body.message).to.equals('Tags with associated articles successfully obtained');
         done();
       });
   });
@@ -146,7 +146,7 @@ describe('Testing Tag Controller', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(404);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equals('We couldn’t find any article');
+        expect(res.body.message).to.equals('We could not find any article');
         done();
       });
   });
